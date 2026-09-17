@@ -18,3 +18,10 @@ editor: visual
 ![](images/Survey2.png)
 
 ![](images/Survey3.png)
+
+
+
+## Appendix
+
+- GitHub Repo: [https://github.com/Buenoalexa11/IBM6500](https://github.com/Buenoalexa11/IBM6500)
+- GitHub Pages: [https://buenoalexa11.github.io/IBM6500/Alexa%20M01-1.html](https://buenoalexa11.github.io/IBM6500/Alexa%20M01-1.html)
