@@ -1,0 +1,20 @@
+---
+title: "Alexa Bueno M01-1"
+author: "Alexa Bueno"
+format:
+  html:
+    embed-resources: true
+editor: visual
+---
+
+## Proof of Sharing
+
+![](images/Share-proof.png)
+
+## Screenshots of Survey
+
+![](images/Survey1.png)
+
+![](images/Survey2.png)
+
+![](images/Survey3.png)
