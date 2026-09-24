@@ -1,0 +1,12 @@
+---
+title: "M01-2"
+author: "Alexa Bueno"
+date: today
+format:
+  html:
+    embed-resources: true
+---
+
+## Qualtrics Survey Main Page
+
+![](images/Survey1.png)
