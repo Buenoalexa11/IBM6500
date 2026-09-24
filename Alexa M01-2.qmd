@@ -10,3 +10,7 @@ format:
 ## Qualtrics Survey Main Page
 
 ![](images/Survey1.png)
+
+Github\
+<https://github.com/Buenoalexa11/IBM6500>\
+<https://buenoalexa11.github.io/IBM6500/Alexa%20M01-2.html>
