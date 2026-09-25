@@ -1,0 +1,83 @@
+---
+title: Class notes for Week 05
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    toc-expand: 1
+    toc-location: right-body
+    embed-resources: true
+execute:
+  freeze: auto
+---
+
+## **Ch09: Measurement & Scaling**
+
+**The 4 scales (NOIR)**
+
+- **Nominal:** numbers are just labels or categories, with no order. Examples: gender, brand names, jersey numbers. You can only count how many fall in each category.
+
+- **Ordinal:** shows ranking or order, but not how far apart the items are. Example: ranking 5 brands from favorite to least favorite. You can find the median.
+
+- **Interval:** equal distances between points, but zero doesn't mean "none." Examples: temperature, rating scales from 1 to 7. You can calculate the mean.
+
+- **Ratio:** equal distances plus a true zero, so you can say "twice as much." Examples: sales, income, age, weight. You can use all stats.
+
+**Comparative scaling** (items are compared directly against each other)
+
+- **Paired comparison:** pick between 2 items at a time (e.g., Coke vs. Pepsi).
+
+- **Rank order:** rank all the items at once, from best to worst.
+
+- **Constant sum:** split a fixed number of points (e.g., 100) based on importance.
+
+- **Q-sort:** sort many items into piles based on how similar they are.
+
+- **Pros:** easy for people to understand, and it catches small differences.
+
+- **Cons:** the results are only ordinal, and they only apply to the items being compared.
+
+**Ch10: Noncomparative Scaling**
+
+With noncomparative scaling, each item is rated on its own, without being compared to others.
+
+**Continuous vs. itemized scales**
+
+- **Continuous (graphic) scale:** the person marks anywhere on a line between two ends (e.g., "Poor" to "Excellent"). It's easy to make but harder to score.
+
+- **Itemized scale:** the person picks from set numbered or labeled choices. The three main types:
+
+  - **Likert:** how much you agree, from Strongly Disagree to Strongly Agree (usually 5 points).
+
+  - **Semantic differential:** a scale between two opposite words, like "Boring vs. Exciting" (usually 7 points).
+
+  - **Stapel:** one word rated from −5 to +5, with no middle/neutral point.
+
+**Decisions when building a scale**
+
+- How many answer choices to offer
+
+- Whether it's balanced (equal positive and negative options) or unbalanced
+
+- Whether it's odd (has a neutral middle) or even (no neutral option)
+
+- Whether it's forced (no "don't know" option) or nonforced
+
+**Reliability** means the scale gives consistent results.
+
+- **Test-retest:** give the same people the same test at two different times.
+
+- **Alternative forms:** give two equivalent versions of the test.
+
+- **Internal consistency:** check whether the items on the scale agree with each other. **Cronbach's alpha** measures this, and a score of 0.6 or lower is considered poor.
+
+**Validity** means the scale measures what it's supposed to measure.
+
+- **Content validity:** it looks like it covers the topic.
+
+- **Criterion validity:** it predicts real outcomes, like actual purchases.
+
+- **Construct validity:** it matches the theory behind the concept.
+
+**Key rule:** a valid scale must be reliable, but a reliable scale isn't always valid. For example, a broken scale that always reads 5 lbs heavy is consistent (reliable) but wrong (not valid).
