@@ -81,3 +81,13 @@ With noncomparative scaling, each item is rated on its own, without being compar
 - **Construct validity:** it matches the theory behind the concept.
 
 **Key rule:** a valid scale must be reliable, but a reliable scale isn't always valid. For example, a broken scale that always reads 5 lbs heavy is consistent (reliable) but wrong (not valid).
+
+Repo:
+https://github.com/Buenoalexa11/IBM6500
+
+Week 5 notes (.qmd):
+https://github.com/Buenoalexa11/IBM6500/blob/main/Week%205%20Class%20Notes.qmd
+
+Week 5 notes (.html):
+https://github.com/Buenoalexa11/IBM6500/blob/main/Week%205%20Class%20Notes.html
+
