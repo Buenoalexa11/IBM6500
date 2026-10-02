@@ -66,3 +66,7 @@ To compare the two ad types, each participant should see only one ad, with about
 ![Q8.4 before revision](images/before8.4.png){width="80%"}
 
 ![Q8.4 after revision](images/corrected8.4.png){width="80%"}
+
+Repo: [link](https://github.com/Buenoalexa11/IBM6500)
+
+Rendered page (GitHub Pages): [link](https://buenoalexa11.github.io/IBM6500/M02%20-%20Setting%20up%20an%20Experimental%20Design.html)
