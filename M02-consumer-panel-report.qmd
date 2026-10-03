@@ -18,7 +18,7 @@ At first the questions seemed simple and casual. Once I started looking at them 
 
 ## Question 1: Awareness of the Term "Microtrend"
 
-![YouGov awareness question about the term "microtrend," with live results shown after answering.](images/Microtrendq.png){#fig-q1 width=80%}
+![YouGov awareness question about the term "microtrend," with live results shown after answering.](images/Microtrendq.png){#fig-q1 width="80%"}
 
 The first question asked, "Before today, had you ever heard of the term 'microtrend'?" (@fig-q1). What stood out to me was that the YouGov page behind the chat already had a headline that said "How harmful are microtrends?" That means I saw the term before I was asked whether I knew it. The phrase "before today" seems to be their way of handling this, but it depends on people being able to separate what they already knew from what they just read.
 
@@ -28,7 +28,7 @@ The other thing I noticed was that the results appeared right after I answered, 
 
 ## Question 2: How Often People Notice Trends
 
-![Frequency question about noticing new trends on social media or online.](images/Q2.png){#fig-q2 width=80%}
+![Frequency question about noticing new trends on social media or online.](images/Q2.png){#fig-q2 width="80%"}
 
 The second question asked how often I notice new trends on social media or online (@fig-q2). The answer choices were "very often," "fairly often," "occasionally," "rarely," "never," and "not sure." I chose this question because these labels can mean very different things to different people. Since I work in ecommerce and spend a lot of time around product content, "very often" to me might mean every day, while someone else might use it to mean once a week. Because of that, two people could pick the same answer while having completely different experiences.
 
@@ -36,7 +36,7 @@ The question also gave examples, like "a new fashion craze" or "an overnight obs
 
 ## Question 3: Where Trends Change Most Rapidly
 
-![Multi-select question asking where respondents notice trends changing most rapidly.](images/q3.png){#fig-q3 width=80%}
+![Multi-select question asking where respondents notice trends changing most rapidly.](images/q3.png){#fig-q3 width="80%"}
 
 This question asked, "Where do you tend to notice trends changing most rapidly? Select as many as you like!" (@fig-q3). This one confused me because the wording and the instructions don't match. "Most rapidly" suggests picking one category, but then it says to select as many as you want. If someone selects five categories, the results can't really show which one is changing the fastest.
 
@@ -44,7 +44,7 @@ I also noticed that one option was "I don't tend to notice trends changing quick
 
 ## Questions 4 and 5: Buying Something Because It Was Trending
 
-![Question asking whether the respondent had bought something solely because it was trending online, followed by a question about how they felt after the trend passed.](images/q5.png){#fig-q4 width=80%}
+![Question asking whether the respondent had bought something solely because it was trending online, followed by a question about how they felt after the trend passed.](images/q5.png){#fig-q4 width="80%"}
 
 The fourth question asked, "Have you ever bought something solely because it was popular or trending online?" (@fig-q4). I chose this one because of the word "solely." Most purchases happen for more than one reason. Someone might buy a trending product partly because it was popular and partly because they actually needed it, and that person might answer no even though the trend clearly influenced them. I also think some people may not want to admit they bought something just because of hype, which could make the "yes" responses lower than they really are.
 
@@ -60,9 +60,13 @@ These questions also connect to my work in ecommerce. Trend-driven buying affect
 
 This experience gave me several ideas I can use for our CEP survey research:
 
-1. Ask awareness questions before exposing respondents to the topic. For example, if our survey asks whether people have heard of equine-assisted therapy, that question should come before any description of Wellness Ranch or its services.
-2. Use specific frequency options instead of vague labels. Choices like "daily" or "a few times a month" are easier to compare than "often" or "occasionally."
-3. Make sure the wording matches the question type. If a question allows multiple answers, it shouldn't ask for the "most" of something, and any "none of these" option should be set up so it can't be selected with other answers.
-4. Avoid absolute words like "solely," "always," or "never" in questions, since they can push people toward one answer.
-5. Use skip logic to keep the survey relevant, but avoid building assumptions into follow-up questions.
-6. Be careful about who is taking the survey. YouGov noted that the live results were unweighted and not representative of the population, which reminded me that a self-selected sample can look very different from the group we actually want to learn about.
+1.  Ask awareness questions before exposing respondents to the topic. For example, if our survey asks whether people have heard of equine-assisted therapy, that question should come before any description of Wellness Ranch or its services.
+2.  Use specific frequency options instead of vague labels. Choices like "daily" or "a few times a month" are easier to compare than "often" or "occasionally."
+3.  Make sure the wording matches the question type. If a question allows multiple answers, it shouldn't ask for the "most" of something, and any "none of these" option should be set up so it can't be selected with other answers.
+4.  Avoid absolute words like "solely," "always," or "never" in questions, since they can push people toward one answer.
+5.  Use skip logic to keep the survey relevant, but avoid building assumptions into follow-up questions.
+6.  Be careful about who is taking the survey. YouGov noted that the live results were unweighted and not representative of the population, which reminded me that a self-selected sample can look very different from the group we actually want to learn about.
+
+Live page: [link](https://buenoalexa11.github.io/IBM6500/M02-consumer-panel-report.html)
+
+GitHub repo: [link](https://github.com/Buenoalexa11/IBM6500/blob/main/M02-consumer-panel-report.qmd)

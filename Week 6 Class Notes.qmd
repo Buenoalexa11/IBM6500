@@ -1,0 +1,73 @@
+---
+title: "Class notes for Week 06"
+author: "Alexa Bueno"
+format:
+    html:
+        toc: true
+        toc-depth: 3
+        toc-expand: 1
+        toc-location: right
+        embed-resources: true
+---
+
+# Announcement
+
+- CEP 03 (Revision of Ch1 and Literature Review of Ch2) presentations this week.
+- Peer feedback posted to the discussion board for each group, using a Strengths / Weaknesses format.
+- Keep the GitHub repo and GitHub Pages link updated so reviewers can see the latest version.
+
+# Overview of Week 06 and More
+
+- Groups present revised Chapter 1 (background, business problem, POs, AOs, significance).
+- Groups present Chapter 2 literature review for each AO:
+    - Existence of well-established models
+    - Adequateness of gathered information
+    - Need for additional analysis
+    - Hypothesis development and research questions
+    - Assessment and affirmation of AOs
+- Next steps: apply peer and instructor feedback, then move toward Chapter 3 (Methods).
+
+# CEP Presentation on CEP 03 - Revision of Ch1 and Lit Review of Ch2
+
+## Group 8 – Simulated Market Research at Scale (TBFI)
+
+- AI consultant-training simulator and SGV Insights Dashboard for TBFI.
+- Compares three AI models against real SGV respondents across four local industries.
+- Key idea: "trust the order, test the level" (AI gets rankings right more than exact values).
+- My feedback:
+    - Strength: project is grounded in the SGV and gives TBFI a practical answer on which model works best.
+    - Suggestion: define how "match" is measured (e.g., Spearman's correlation) and consider whether AI personas represent the SGV's diverse communities.
+
+## Group 9 – A Filling Recipe for Open Tables at Kellogg Ranch
+
+- Client: The Restaurant at Kellogg Ranch (RKR), moving to stand-alone service days that need steady reservations.
+- AOs: newsletter A/B test, customer satisfaction survey, Facebook content, website usability, Instagram engagement.
+- My feedback:
+    - Strength: AO1 tests one change at a time; AO4 has clear tasks and an 80% completion benchmark.
+    - Suggestion: shared UTM tracking across channels and a side-by-side Facebook vs. Instagram comparison.
+
+## Team 2 – Glendora Education Foundation
+
+- $25 community membership campaign launching October 2026 to reach new, younger families.
+- AOs: multi-touch attribution (AO1), awareness survey (AO2), cohort retention tracking (AO3), RFM donor segmentation (AO4).
+- Donor journey: October membership → GivingTuesday → Sip and Support (March 2027).
+- My feedback:
+    - Strength: AOs follow one connected donor journey and stay realistic for a small staff.
+    - Suggestion: add hypotheses and include all cited sources in the reference list.
+
+## Common Themes Across Feedback
+
+- Strong PO–AO alignment is expected, with each member owning an AO.
+- Write out formal hypotheses so predictions are clear and testable.
+- Avoid hypotheses that feel like common sense; explain what is unique to the client.
+- Check citations so they render correctly in Quarto.
+- Tie engagement metrics to real outcomes (reservations, memberships, inquiries) with tracking like UTM links and QR codes.
+
+# CEP Group Meeting
+
+- Review peer and instructor feedback on our Ch1 and Ch2.
+- Revise POs/AOs and add or refine hypotheses where needed.
+- Fix any citation or formatting issues in the Quarto file.
+- Assign next tasks and deadlines for Chapter 3 (Methods).
+
+    -
