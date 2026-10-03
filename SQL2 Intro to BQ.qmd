@@ -15,12 +15,11 @@ format:
 
 # Course-Completion Evidence
 
-![Certificate](School/School/IBM6500/images/Intro to BQ certificate.jpg)
+![Certificate](images/bq-certificate.jpg){fig-align="center" width="85%"}
 
-![Sections Completed](School/School/IBM6500/images/1 section completed.png){width="267"}
+![Sections Completed](images/bq-section-completed.png){fig-align="center" width="85%"}
 
-![Sections completed](School/School/IBM6500/images/sections completed.png){width="356"}
-
+![Sections completed](images/bq-sections-completed.png){fig-align="center" width="85%"}
 # Learning Notes and Key Takeaways
 
 ## Chapter 1: BigQuery Basics
@@ -196,3 +195,8 @@ Considerations:
 #### CEP application
 
 This course gave me a much clearer picture of how BigQuery fits into our CEP work with Wellness Ranch. Since GA4 can export raw event data to BigQuery, understanding how projects, datasets, and tables are organized will help me find and access the site data our team is collecting. Skills like filtering by date, grouping with aggregations, and using HAVING will let me summarize things like traffic sources, page views, or conversions over specific time periods, which ties directly into my SEO performance analysis. I also learned that GA4 stores event details as arrays, so UNNEST will be important for pulling out information like page titles or traffic parameters. The optimization lessons were useful too, since selecting only needed columns and filtering early keeps queries efficient and cost-effective. Overall, this gives me a foundation for turning raw website data into summaries the team can actually use to make recommendations for Wellness Ranch.
+
+# Appendix: Publication Links
+
+- [GitHub Repository](https://github.com/Buenoalexa11/IBM6500)
+- [Published Introduction to BigQuery Report](https://buenoalexa11.github.io/IBM6500/SQL2%20Intro%20to%20BQ.html)
