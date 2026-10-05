@@ -19,8 +19,7 @@ format:
 
 ![Sections Completed](images/bq-section-completed.png){fig-align="center" width="85%"}
 
-![Sections completed](images/bq-sections-completed.png){fig-align="center" width="85%"}
-# Learning Notes and Key Takeaways
+![Sections completed](images/bq-sections-completed.png){fig-align="center" width="85%"} \# Learning Notes and Key Takeaways
 
 ## Chapter 1: BigQuery Basics
 
@@ -108,7 +107,7 @@ Returns any one value from each group. It's handy when a column is the same acro
 ### Special Aggregations
 
 | Function | What it does |
-|------------------------------------|------------------------------------|
+|----|----|
 | LOGICAL_AND | True only if every row in the group meets the condition |
 | LOGICAL_OR | True if at least one row meets it |
 | STRING_AGG | Combines text from many rows into one string |
@@ -156,7 +155,7 @@ Returns any one value from each group. It's handy when a column is the same acro
 ### DML (Data Manipulation Language)
 
 | Statement | What it does                                                    |
-|------------------------------------|------------------------------------|
+|-----------|-----------------------------------------------------------------|
 | INSERT    | Adds new rows                                                   |
 | UPDATE    | Changes existing rows                                           |
 | DELETE    | Removes rows                                                    |

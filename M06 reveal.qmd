@@ -1,0 +1,115 @@
+---
+title: "Getting Started with R"
+subtitle: "Basic Operations and a First ggplot2 Chart"
+author: "Alexa Bueno"
+date: today
+format:
+  revealjs:
+    theme: simple            # built-in theme, try moon, sky, or serif too
+    slide-number: true       # shows slide numbers in the corner
+    transition: slide        # animation between slides
+    code-line-numbers: true
+    embed-resources: true    # packs everything into one .html file
+---
+
+# The Basics
+
+## Why R?
+
+::: {.incremental}
+- Free and open source
+- Built for statistics and data visualization
+- Thousands of packages for almost any analysis
+- Works with Quarto, so code, charts, and writing live in one file
+:::
+
+::: notes
+Speaker notes go here. Press S during the presentation to see them.
+:::
+
+## R as a Calculator
+
+```{r}
+#| echo: true
+1 + 1
+2 * 2
+3^3   # ^ is the exponent operator in R
+```
+
+## Storing Values
+
+:::: {.columns}
+
+::: {.column width="50%"}
+```{r}
+#| echo: true
+message <- "Hello world!"
+print(message)
+
+number <- 7
+number
+```
+:::
+
+::: {.column width="50%"}
+```{r}
+#| echo: true
+max(2, 5, 90, 30)
+min(2, 5, 90, 30)
+```
+:::
+
+::::
+
+`<-` is the assignment operator. R users prefer it over `=`.
+
+# Visualizing Data
+
+## Building a Density Plot
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "|1|3|5-6|7-11"
+library(ggplot2)
+
+theme_set(theme_classic())
+
+g <- ggplot(mpg, aes(cty))
+g + geom_density(aes(fill = factor(cyl)), alpha = 0.8) +
+  labs(title = "Density plot",
+       subtitle = "City Mileage Grouped by Number of Cylinders",
+       caption = "Source: mpg dataset",
+       x = "City Mileage",
+       fill = "# Cylinders")
+```
+
+::: notes
+Clicking through highlights each part of the code step by step.
+:::
+
+## The Result
+
+```{r}
+#| echo: false
+#| fig-width: 9
+#| fig-height: 5
+library(ggplot2)
+theme_set(theme_classic())
+
+g <- ggplot(mpg, aes(cty))
+g + geom_density(aes(fill = factor(cyl)), alpha = 0.8) +
+  labs(title = "Density plot",
+       subtitle = "City Mileage Grouped by Number of Cylinders",
+       caption = "Source: mpg dataset",
+       x = "City Mileage",
+       fill = "# Cylinders")
+```
+
+## Takeaways
+
+::: {.incremental}
+- Cars with fewer cylinders get better city mileage
+- ggplot2 builds charts in layers connected with `+`
+- Because the chart is generated from code, anyone can reproduce it
+:::
