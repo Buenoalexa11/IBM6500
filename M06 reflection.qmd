@@ -103,9 +103,10 @@ Creating the Revealjs presentation helped me understand how Quarto can combine p
 ## Presentation Links
 
 **Published Revealjs Presentation:**\
-<https://buenoalexa11.github.io/IBM6500/M06%20reveal.html>
+[Link](https://buenoalexa11.github.io/IBM6500/M06%20reveal.html)
 
 **GitHub Repository:**\
-<https://github.com/Buenoalexa11/IBM6500>
+[Link](https://github.com/Buenoalexa11/IBM6500)
 
-**Published link:**
+**Published link:\**
+[Link](https://buenoalexa11.github.io/IBM6500/M06%20reveal.html)
