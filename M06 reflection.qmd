@@ -1,0 +1,111 @@
+---
+title: "M06-Reflection Essay-Advanced Data Wrangling"
+author: "Alexa Bueno"
+date: today
+format: 
+  html: 
+    toc: true
+    toc-depth: 4
+    toc-expand: 2
+    number-sections: true
+    code-link: true
+    embed-resources: true
+    theme: flatly
+    code-fold: true
+    code-tools: true
+    code-overflow: wrap
+editor: visual
+execute: 
+  freeze: auto
+---
+
+# Quarto Revealjs and Advanced Data Wrangling
+
+## Step 1: Reflection on Revealjs
+
+My impression of Revealjs is that it provides a flexible way to create presentations while keeping the presentation connected to the coding and data analysis workflow. Instead of designing each slide manually, the presentation can be created directly in Quarto using Markdown and code. This makes it easier to combine written explanations, code, charts, and other content in one document.
+
+One of the main strengths of Revealjs is reproducibility. Because the presentation is created from a `.qmd` file, charts and other outputs can be regenerated when the code or data changes. It also works well for data analysis because R code can be included directly in the presentation. Revealjs also supports features such as slide transitions, fragments, speaker notes, and web-based publishing.
+
+Compared with PowerPoint, Revealjs is stronger for reproducible and code-based presentations, especially when presenting data analysis. It is also convenient for publishing presentations online and keeping the presentation connected to GitHub. However, PowerPoint is easier for users who prefer drag-and-drop design and more direct control over the visual placement of individual elements. Overall, I think Revealjs is especially useful for technical and data-focused presentations, while PowerPoint is more convenient for traditional presentation design.
+
+## Step 2: My Revealjs Presentation
+
+I created a Revealjs presentation called **“Getting Started with R: Basic Operations and a First ggplot2 Chart.”** The presentation introduces the basics of R, including simple calculations, storing values, using functions such as `max()` and `min()`, and creating a first visualization with `ggplot2`.
+
+### Published Presentation
+
+**Presentation:**\
+<https://buenoalexa11.github.io/IBM6500/M06%20reveal.html>
+
+The presentation includes a reproducible `ggplot2` density plot using the `mpg` dataset. The chart shows city mileage grouped by the number of cylinders, allowing the viewer to see how mileage differs across vehicles with different cylinder counts.
+
+```         
+library(ggplot2)  ggplot(mpg, aes(cty)) +   geom_density(aes(fill = factor(cyl)), alpha = 0.8) +   labs(     title = "Density Plot",     subtitle = "City Mileage Grouped by Number of Cylinders",     x = "City Mileage",     fill = "# Cylinders"   ) 
+```
+
+The main thing I learned from creating the Revealjs presentation was how R code, written explanations, and visualizations can be combined into one reproducible presentation. I also became more comfortable with using Quarto to create a presentation that can be published directly to the web.
+
+## Step 3: Advanced Data Wrangling
+
+The advanced wrangling lecture introduced different ways to work with and transform relational data. Three functions I found useful were `left_join()`, `filter()`, and `summarise()`. Each serves a different purpose when preparing data for analysis.
+
+### 1. `left_join()`
+
+`left_join()` is useful when I need to combine information from two data frames using a shared identifier. It keeps all observations from the first data frame and adds matching information from the second.
+
+```         
+library(dplyr)  customers |>   left_join(orders, by = "customer_id") 
+```
+
+Output:
+
+```         
+  customer_id customer_name order_total 1           1 Alex          50 2           2 Maria         75 3           2 Maria         40 4           3 John          NA 
+```
+
+### 2. `filter()`
+
+`filter()` is used when I only want to keep observations that meet a specific condition.
+
+```         
+orders |>   filter(order_total > 50) 
+```
+
+Output:
+
+```         
+  customer_id order_total 1           2          75 
+```
+
+### 3. `summarise()`
+
+`summarise()` is useful when I want to reduce data into a summary statistic, such as an average or total.
+
+```         
+orders |>   group_by(customer_id) |>   summarise(avg_order = mean(order_total)) 
+```
+
+Output:
+
+```         
+# A tibble: 2 × 2   customer_id avg_order 1           1      50.0 2           2      57.5 
+```
+
+These three functions demonstrate how data can be combined, narrowed down, and summarized during a data wrangling workflow. Using them together makes it possible to move from raw relational data to a more useful dataset for analysis.
+
+## Conclusion
+
+Creating the Revealjs presentation helped me understand how Quarto can combine presentation design with reproducible data analysis. The advanced wrangling lecture also showed how functions such as `left_join()`, `filter()`, and `summarise()` can be used to organize and analyze relational data. Together, these skills make it easier to create presentations that are both informative and reproducible.
+
+# Appendix
+
+## Presentation Links
+
+**Published Revealjs Presentation:**\
+<https://buenoalexa11.github.io/IBM6500/M06%20reveal.html>
+
+**GitHub Repository:**\
+<https://github.com/Buenoalexa11/IBM6500>
+
+**Published link:**
