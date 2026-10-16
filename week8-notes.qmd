@@ -1,0 +1,36 @@
+---
+title: "IBM 6500 Week 8 Class Notes"
+author: "Alexa Bueno"
+date: 2026-10-15
+format: html
+---
+
+## Rendering
+
+Dr. Jung walked through rendering Quarto files. Rendering turns the .qmd (code + writing) into the .html that GitHub Pages actually publishes.
+
+- Render in the Positron Terminal: `quarto render filename.qmd`
+- Re-render after every edit. Pages shows the .html, not the .qmd, so an old .html means an old live page.
+- Images live in the images/ subfolder. If one is missing on the live page, check the file path and name spelling first.
+- After rendering: git pull, add, commit, push, then wait 1 to 2 minutes and check the live link.
+
+Add anything specific he demoed: \_\_\_\_
+
+## Presentations next week (Week 9)
+
+Groups present next class, Thursday Oct 22. The focus is the methods we plan to use for our AOs.
+
+- [ ] Confirm time limit and format (slides, RevealJS, or Quarto page)
+- [ ] Confirm who presents which AO
+- [ ] Finish my AO1 slides and send to the group
+- [ ] Do a run-through with Ron, Kevin, and Brian before Thursday
+
+## Methods for our AOs
+
+Each AO needs a clear method: what data we use, how we analyze
+
+**Links:**
+
+- Repo file: <https://github.com/Buenoalexa11/IBM6500/blob/main/IBM%206500%20Week%208%20Class%20Notes.qmd>
+
+- Live page: <https://buenoalexa11.github.io/IBM6500/IBM%206500%20Week%208%20Class%20Notes.html>
