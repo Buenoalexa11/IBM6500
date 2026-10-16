@@ -16,7 +16,7 @@ format:
 
 ## Why R?
 
-::: {.incremental}
+::: incremental
 - Free and open source
 - Built for statistics and data visualization
 - Thousands of packages for almost any analysis
@@ -38,8 +38,7 @@ Speaker notes go here. Press S during the presentation to see them.
 
 ## Storing Values
 
-:::: {.columns}
-
+::::: columns
 ::: {.column width="50%"}
 ```{r}
 #| echo: true
@@ -58,8 +57,7 @@ max(2, 5, 90, 30)
 min(2, 5, 90, 30)
 ```
 :::
-
-::::
+:::::
 
 `<-` is the assignment operator. R users prefer it over `=`.
 
@@ -108,7 +106,7 @@ g + geom_density(aes(fill = factor(cyl)), alpha = 0.8) +
 
 ## Takeaways
 
-::: {.incremental}
+::: incremental
 - Cars with fewer cylinders get better city mileage
 - ggplot2 builds charts in layers connected with `+`
 - Because the chart is generated from code, anyone can reproduce it
