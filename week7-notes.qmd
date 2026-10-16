@@ -1,0 +1,64 @@
+---
+title: "IBM 6500 | Week 7 Class Notes"
+author: "Alexa Bueno"
+date: "October 8, 2026"
+format:
+  html:
+    toc: true
+    embed-resources: true
+---
+
+# Part 1: C&M Table and Questionnaire
+
+- The C&M table is the **blueprint** for the questionnaire.
+- In practice, you go **back and forth**: draft survey questions to clarify your thinking, then tighten the C&M table.
+- **Coffee shop study example:**
+  - Hypotheses come from the literature review in the "mothership" document (like our CEP report).
+  - They're then copied into the C&M table.
+  - Each construct gets a definition, items, source, scale type, the hypothesis it tests, and the analysis.
+- **Survey doc tips:**
+  - Put variable names in brackets so they match Qualtrics.
+  - Add programmer notes (e.g., "terminate if…").
+  - Put screening questions first.
+- **Demographics:** Usually at the end, but ask them first if they're used for screening.
+
+# Part 2: Publishing Multiple Webpages with GitHub
+
+## Steps
+
+1. **Create the repo (Positron):** Source Control → Initialize Repository → Commit → Publish Branch → GitHub public.
+2. **Turn on Pages:** Repo → Settings → Pages → Deploy from a branch → `main` / `root` → Save.
+3. **Render:** Click **Preview** on each `.qmd` to create its `.html` file.
+4. **Push:** Stage → Commit → **Sync Changes**.
+5. **Open with the full file name:** Add the `.html` file name to the end of the site URL.
+
+## Key idea
+
+The bare site URL gives a **404 error**, because GitHub Pages looks for `index.html`. Add the file name to reach each page:
+
+```
+https://buenoalexa11.github.io/IBM6500/week6.html
+https://buenoalexa11.github.io/IBM6500/week7.html
+```
+
+Each HTML file in the same folder gets its own URL. That's how one repo hosts multiple single webpages.
+
+## index.html vs. full file name
+
+- **One page:** `index.html` is simplest.
+- **Multiple pages:** Give each file a unique name and use full URLs. Otherwise each render overwrites `index.html`.
+- **Full website:** An `index.html` homepage that links to other pages through `_quarto.yml` (later project).
+
+**Common mistake:** Submitting the bare URL. Always submit the **full URL with the file name**.
+
+# Part 3: CEP Updates
+
+- Add **P01 / AO01** labels under headings.
+- **Chapter 3** now has two second-level headings: Survey Data and Secondary Data.
+- **Section 2.7:** Add research questions or hypotheses by AO (RQ1-1, RQ1-2, …).
+  - Use a **research question** when there's no clear expected relationship.
+  - Use a **hypothesis** when the literature points to one.
+- **Survey:** Required for this class.
+  - No IRB needed if it's class-only.
+  - A gift card drawing (about $200) works as an incentive.
+  - Sample size: 200 minimum, about 1,000 ideal.
