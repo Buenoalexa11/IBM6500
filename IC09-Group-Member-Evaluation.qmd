@@ -1,0 +1,35 @@
+---
+title: "IC09-Group-Member-Evaluation"
+author: "Alexa Bueno"
+date: "10/23/2026"
+format:
+  html:
+    embed-resources: true
+    theme: cosmo
+editor: visual
+---
+
+## **GROUP MEMBER EVALUATION FORM**
+
+Name:\_Alexa Bueno                            Date:\_\_\_10/23/2026\_
+
+Group Name/Project Name: \_\_\_Group 4\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
+Please evaluate your group members (including you) from 1 to 100% scale.  If you believe that a member equally contribute to the group project output submitted, give them 100%. If you believe that a member did not do his or her fair share, assign a percentage less than 100%. Evaluation will be confidential. If a person receives grades that are less than 100% from more than one person, the average of peer evaluation will be weighted to group grade to determine individual grade. Each student must evaluate his/her peers in the absence of the other members to guarantee confidentiality and accuracy. Each student must enclose his/her own evaluation form in an envelope, seal it, write the word, “confidential” across the seal and submit it directly to me to assure confidentiality. Do not ask your friends to submit it for you. Only personal, direct submission will be accepted. Group grade won’t be assigned to you until you submit it. Further if you think there was a group leader who contributed to your group’s success greatly above and beyond regular group members, please identify them below and make a comment. If there is a consensus, the MVP may receive up to 10% of the group’s score on top of the group score.
+
+|                    |      |     |
+|--------------------|------|-----|
+| (self) Alexa Bueno | 100% | No  |
+| 2\. Kevin Bachez   | 100% | YES |
+| 3\. Brian Vuong    | 100% | No  |
+| 4\. Ron Sabilla    | 100% | No  |
+
+Briefly make comments on contributions of your teammates to the project.  If you gave less than a perfect grade, please justify your evaluation below.
+
+Our group worked well together and everyone contributed equally to the project. I organized and led our team meetings, took notes, and handled AO1, the SEO performance analysis for the Wellness Ranch website. Kevin took ownership of AO2 and the GA4 website analytics and conversion tracking, which is a key part of our data collection workstream. He has also been our main point of contact with Angelica at Wellness Ranch, working to secure our access to the Wix website and GA4 property before the current volunteer leaves. That access is essential for the rest of the project, so his follow-through there has been a big help. Brian has led our communication with Dr. Zhang, keeping her updated on our progress and bringing her feedback back to the group so we stay aligned with project expectations. Ron took ownership of AO4, completed his sections on time, and contributed to the problem definition, research framing, and presentation. Communication within the group was consistent, and everyone kept their parts updated in our shared GitHub repo so the Quarto report came together smoothly. I believe each member did their fair share, so I gave everyone a full score.\
+
+**Links**
+
+-  GitHub Pages : <https://buenoalexa11.github.io/IBM6500/IC09-Group-Member-Evaluation.html>
+
+- Repo : <https://github.com/Buenoalexa11/IBM6500>
