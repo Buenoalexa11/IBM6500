@@ -14,3 +14,4 @@ For this assignment, I built a four-page Quarto website with a home page, a CEP 
 
 1. **Live website (Netlify):** <https://alexa-bueno-ibm6500.netlify.app>
 2. **GitHub repository:** <https://github.com/Buenoalexa11/IBM6500-M10>
+3. **Live page** <https://buenoalexa11.github.io/IBM6500/Alexa%20Bueno-M10-Hands-on.html>
