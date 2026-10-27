@@ -26,7 +26,7 @@ I completed the Intermediate SQL course on DataCamp on October 20, 2026, through
 The DataCamp course practiced on a films database (tables such as `films`, `people`, `reviews`, and `roles`). To make these notes useful for my CEP, I rewrote most examples using placeholder tables modeled on the kind of data a wellness ranch nonprofit like my CEP client would collect. These tables are hypothetical and contain no real client data:
 
 | Placeholder table | What it represents |
-|------------------------------------|------------------------------------|
+|----|----|
 | `inquiries` | One row per website inquiry form submission (inquiry date, program of interest, traffic source, state) |
 | `sessions` | One row per therapy session booked (session date, program, price, session length) |
 | `web_traffic` | One row per day per landing page (page path, sessions, users, conversions) |
@@ -204,5 +204,5 @@ This is the query pattern I expect to use most in my CEP. Grouping inquiries by 
 # Appendix: Publication Links
 
 - [GitHub Repository](https://github.com/Buenoalexa11/IBM6500)
+
 - [Published Intermediate SQL Report](https://buenoalexa11.github.io/IBM6500/SQL%203.html)
-- [Published Portfolio Landing Page](https://buenoalexa11.github.io/IBM6500/index.html)

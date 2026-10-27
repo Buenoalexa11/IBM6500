@@ -2,7 +2,9 @@
 title: "IBM 6500 Week 8 Class Notes"
 author: "Alexa Bueno"
 date: 2026-10-15
-format: html
+format:
+  html:
+    embed-resources: true
 ---
 
 ## Rendering
@@ -14,7 +16,6 @@ Dr. Jung walked through rendering Quarto files. Rendering turns the .qmd (code +
 - Images live in the images/ subfolder. If one is missing on the live page, check the file path and name spelling first.
 - After rendering: git pull, add, commit, push, then wait 1 to 2 minutes and check the live link.
 
-Add anything specific he demoed: \_\_\_\_
 
 ## Presentations next week (Week 9)
 
@@ -33,4 +34,4 @@ Each AO needs a clear method: what data we use, how we analyze
 
 - Repo file: <https://github.com/Buenoalexa11/IBM6500/blob/main/IBM%206500%20Week%208%20Class%20Notes.qmd>
 
-- Live page: <https://buenoalexa11.github.io/IBM6500/IBM%206500%20Week%208%20Class%20Notes.html>
+- Live page: <https://buenoalexa11.github.io/IBM6500/week8-notes.html>

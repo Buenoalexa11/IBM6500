@@ -1,0 +1,16 @@
+---
+title: "M10 Hands-on Practice: Sharing Outputs with the Audience"
+author: "Alexa Bueno"
+format:
+  html:
+    embed-resources: true
+---
+
+## Portfolio Website
+
+For this assignment, I built a four-page Quarto website with a home page, a CEP dashboard portal, a CSS and SCSS page, and a listings page, then published it to Netlify.
+
+## Links
+
+1. **Live website (Netlify):** <https://alexa-bueno-ibm6500.netlify.app>
+2. **GitHub repository:** <https://github.com/Buenoalexa11/IBM6500-M10>
