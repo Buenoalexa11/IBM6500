@@ -1,0 +1,165 @@
+---
+title: "Portfolio Website Project Proposal"
+subtitle: "IBM 6500: Customer Insights Methods and Survey Research"
+author: "Alexa Bueno"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: false
+    embed-resources: true
+---
+
+## Overview
+
+This proposal outlines the plan for my portfolio website. The site will be built in Quarto, hosted on Netlify through GitHub, and connected to Google Analytics 4 so it can collect its own traffic data over the rest of the term. It will have four main tabs: Home, Digital Marketing Projects, Marketing Analytics Projects, and Resume. Both project tabs will use Quarto listings so each project shows up as its own card that links to a full page.
+
+## 1. Home Page
+
+The home page will introduce who I am and what I'm working toward. It will include:
+
+- A photo and short bio covering my graduate program at Cal Poly Pomona and my role as an E-Commerce Associate at Hamee US
+- Career aspirations, with a focus on using data to improve operations and marketing
+- A summary of skills (R, Quarto, GitHub, Qualtrics, GA4, SQL and BigQuery)
+- Education and certifications
+- Links to my LinkedIn and GitHub
+
+I already built a version of this page in the M10 hands-on practice using the trestles about template and a custom pink and neutral SCSS theme, so I plan to carry that design over.
+
+## 2. Digital Marketing Projects
+
+This page will show several projects as a listing grid.
+
+### Wellness Ranch SEO Performance Analysis (CEP)
+
+For my Culminating Experience Project, our team is working with Wellness Ranch Equine Assisted Therapy, a nonprofit. My part of the project is the SEO performance analysis. This page will cover the site's current search visibility, keyword and page performance from Google Search Console, and recommendations for improving organic traffic.
+
+### CPP Farm Store: Digital Commerce and Retail Media Strategy
+
+For this group project, we developed a digital commerce strategy to help the Cal Poly Pomona Farm Store sell and market its products online while connecting its online presence to the physical store. We built a mock Shopify mini-store with organized product categories, then explored connecting the catalog to Google Merchant Center so eligible products could appear on Google Shopping. This meant preparing product titles, descriptions, images, pricing, inventory, and pickup settings for the product feed.
+
+We also planned how to promote the store through Google Shopping Ads and Performance Max, including product selection, audiences, budgets, creative assets, and campaign goals. Our target audience included CPP students, faculty and staff, local Pomona residents and families, and shoppers interested in fresh, seasonal, and locally focused products. To measure results, we planned a GA4 and Looker Studio dashboard to track traffic, acquisition channels, conversions, revenue, average order value, and how online discovery leads to in-store pickup.
+
+Deliverables included the Shopify mini-store, a product feed, a retail media setup, a campaign plan, a creative brief, and an analytics dashboard plan.
+
+### GA4 Certification Micro-Applications
+
+This project documents my GA4 certification work using the Google Merchandise Store demo account. It will walk through the reports and explorations I built and what I learned about tracking user behavior on an ecommerce site.
+
+## 3. Marketing Analytics Projects
+
+This page will also use a listing grid. It will include the two required projects below plus additional analytics work from my courses.
+
+### Project A: Portfolio Website Traffic Analysis
+
+**Data and source**
+Traffic data from my own portfolio website, collected through Google Analytics 4. If time allows, I will also export the data to BigQuery for deeper queries.
+
+**Managerial problem**
+A portfolio site only helps if the right people visit it and engage with it. Without tracking, there is no way to know whether recruiters or hiring managers are finding the site, which pages hold their attention, or where visitors drop off.
+
+**Target audience**
+Me as the site owner, and more broadly, anyone managing a personal brand or small business website who needs to decide where to focus their content.
+
+**Research questions**
+
+1. Where is my traffic coming from (direct, organic search, referral, social such as LinkedIn)?
+2. Which pages get the most views and the longest engagement time?
+3. How do visitors move through the site, and where do they leave?
+4. Do visitors on mobile behave differently than visitors on desktop?
+
+**Expected impact**
+The results will show which projects and pages are most effective, so I can improve weaker pages, adjust how I share the site, and make the portfolio more useful for job searching.
+
+**Methods**
+
+- GA4 standard reports and Explorations (acquisition, engagement, path exploration)
+- Descriptive statistics on sessions, users, engagement rate, and average engagement time
+- Comparisons across traffic sources and device categories
+- Data visualization in R (ggplot2) or Looker Studio
+- SQL queries in BigQuery if the export is set up in time
+
+### Project B: RevealJS Presentation, Member Satisfaction Insights for a Credit Union
+
+**Data and source**
+Case 31 survey data from Employees Federal Credit Union (128 respondents), provided through the course.
+
+**Managerial problem**
+The credit union needs to understand what drives member satisfaction and loyalty so it can decide where to invest in service improvements and keep members from switching to competitors.
+
+**Target audience**
+The credit union's CEO and marketing leadership.
+
+**Research questions**
+
+1. How satisfied are members overall, and which service areas score highest and lowest?
+2. Which factors are most strongly related to overall satisfaction?
+3. Do satisfaction levels differ across member groups (for example, by age or length of membership)?
+4. What actions would most likely improve member retention?
+
+**Expected impact**
+The findings will help leadership prioritize the service areas that matter most to members, which supports retention and more focused marketing spending.
+
+**Methods**
+
+- Descriptive statistics and frequency tables
+- Cross-tabulations and chi-square tests for group differences
+- t-tests or ANOVA to compare satisfaction across member segments
+- Correlation and regression to identify drivers of satisfaction
+- Results presented as a RevealJS slide deck built in Quarto
+
+### Project C: TRI LA Wildfire Recovery, Tracking and Analytics Strategy
+
+**Data and source**
+Google Analytics 4 website data and Mailchimp email campaign data from the Trauma Resource Institute (TRI), a nonprofit, covering June to December 2025.
+
+**Managerial problem**
+TRI offers free wildfire recovery resources and workshops for people affected by the Los Angeles wildfires, including Altadena-area communities. The organization needed to know which outreach efforts were actually connecting survivors with those resources, and where people were dropping off before registering.
+
+**Target audience**
+TRI leadership and its outreach team, with results that could also support future grant funding.
+
+**Research questions**
+
+1. Where do website visitors come from, and which wildfire recovery pages do they engage with?
+2. Where do visitors drop off before registering for workshops or requesting training?
+3. Which email campaigns and messages generate the most engagement?
+4. How can email and website data be connected to show which campaigns drive results?
+
+**Key findings**
+Across 26 Mailchimp campaigns, TRI delivered 103,952 emails with a 46.13% average open rate, a 7.51% average click rate, and 44,062 total clicks. GA4 showed 979 active users from LA-area cities (825 of them new) from June to November 2025, with an average engagement time of 3 minutes and 32 seconds. However, many visitors engaged with recovery information without moving on to registration or training request forms. About 86% of traffic came from direct and organic search, while social media brought in very little.
+
+**Expected impact**
+Our group recommended improving the training request form, adding clearer calls to action, improving SEO and navigation, standardizing UTM naming, and connecting email and website analytics for better attribution. These changes would help TRI reach more survivors and show measurable outcomes to funders.
+
+**Methods**
+
+- GA4 analysis of acquisition, engagement, and drop-off points
+- Mailchimp campaign performance analysis
+- Standardized UTM links for email buttons, text links, footers, and banners
+- An automated reporting workflow connecting Mailchimp and Bitly through Zapier to Google Sheets and Looker Studio (tested for the class project, not deployed to TRI's live systems)
+- A Looker Studio dashboard summarizing campaign performance
+
+### Project D: Credit Union Survey Dashboard
+
+An R-based Quarto dashboard summarizing the Case 31 survey results with charts. I built a first version in the M10 hands-on practice and plan to refine it for the portfolio.
+
+## 4. Resume
+
+The resume tab will display my current resume on the page and include a downloadable PDF. It will cover my education at Cal Poly Pomona and Cal State LA, my experience at Hamee US and previous roles, technical skills, and certifications.
+
+## Timeline
+
+| Step | Target |
+|---|---|
+| Set up site structure and theme | Done (from M10 practice) |
+| Install GA4 tracking on the live site | As soon as possible so data can build up |
+| Build project pages and listings | Throughout the term |
+| Complete traffic analysis and RevealJS deck | Before the final deadline |
+| Final review and video submission | Week 16 |
+
+##Repo file:
+https://github.com/Buenoalexa11/IBM6500/blob/main/portfolio-proposal.qmd
+##Live page: 
+https://buenoalexa11.github.io/IBM6500/portfolio-proposal.html
