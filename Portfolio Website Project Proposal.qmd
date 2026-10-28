@@ -148,5 +148,5 @@ The resume tab will display my current resume on the page and include a download
 
 ## Links
 
-- Repo file: [https://github.com/Buenoalexa11/IBM6500/blob/main/portfolio-proposal.qmd](https://github.com/Buenoalexa11/IBM6500/blob/main/portfolio-proposal.qmd)
-- Live page: [https://buenoalexa11.github.io/IBM6500/portfolio-proposal.html](https://buenoalexa11.github.io/IBM6500/portfolio-proposal.html)
+- GitHub repo: [https://github.com/Buenoalexa11/IBM6500](https://github.com/Buenoalexa11/IBM6500)
+- Live page: [https://buenoalexa11.github.io/IBM6500/Portfolio%20Website%20Project%20Proposal.html](https://buenoalexa11.github.io/IBM6500/Portfolio%20Website%20Project%20Proposal.html)
