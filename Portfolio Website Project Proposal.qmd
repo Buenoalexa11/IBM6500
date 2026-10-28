@@ -53,24 +53,20 @@ This page will also use a listing grid. It will include the two required project
 
 ### Project A: Portfolio Website Traffic Analysis
 
-**Data and source**
-Traffic data from my own portfolio website, collected through Google Analytics 4. If time allows, I will also export the data to BigQuery for deeper queries.
+**Data and source** Traffic data from my own portfolio website, collected through Google Analytics 4. If time allows, I will also export the data to BigQuery for deeper queries.
 
-**Managerial problem**
-A portfolio site only helps if the right people visit it and engage with it. Without tracking, there is no way to know whether recruiters or hiring managers are finding the site, which pages hold their attention, or where visitors drop off.
+**Managerial problem** A portfolio site only helps if the right people visit it and engage with it. Without tracking, there is no way to know whether recruiters or hiring managers are finding the site, which pages hold their attention, or where visitors drop off.
 
-**Target audience**
-Me as the site owner, and more broadly, anyone managing a personal brand or small business website who needs to decide where to focus their content.
+**Target audience** Me as the site owner, and more broadly, anyone managing a personal brand or small business website who needs to decide where to focus their content.
 
 **Research questions**
 
-1. Where is my traffic coming from (direct, organic search, referral, social such as LinkedIn)?
-2. Which pages get the most views and the longest engagement time?
-3. How do visitors move through the site, and where do they leave?
-4. Do visitors on mobile behave differently than visitors on desktop?
+1.  Where is my traffic coming from (direct, organic search, referral, social such as LinkedIn)?
+2.  Which pages get the most views and the longest engagement time?
+3.  How do visitors move through the site, and where do they leave?
+4.  Do visitors on mobile behave differently than visitors on desktop?
 
-**Expected impact**
-The results will show which projects and pages are most effective, so I can improve weaker pages, adjust how I share the site, and make the portfolio more useful for job searching.
+**Expected impact** The results will show which projects and pages are most effective, so I can improve weaker pages, adjust how I share the site, and make the portfolio more useful for job searching.
 
 **Methods**
 
@@ -82,24 +78,20 @@ The results will show which projects and pages are most effective, so I can impr
 
 ### Project B: RevealJS Presentation, Member Satisfaction Insights for a Credit Union
 
-**Data and source**
-Case 31 survey data from Employees Federal Credit Union (128 respondents), provided through the course.
+**Data and source** Case 31 survey data from Employees Federal Credit Union (128 respondents), provided through the course.
 
-**Managerial problem**
-The credit union needs to understand what drives member satisfaction and loyalty so it can decide where to invest in service improvements and keep members from switching to competitors.
+**Managerial problem** The credit union needs to understand what drives member satisfaction and loyalty so it can decide where to invest in service improvements and keep members from switching to competitors.
 
-**Target audience**
-The credit union's CEO and marketing leadership.
+**Target audience** The credit union's CEO and marketing leadership.
 
 **Research questions**
 
-1. How satisfied are members overall, and which service areas score highest and lowest?
-2. Which factors are most strongly related to overall satisfaction?
-3. Do satisfaction levels differ across member groups (for example, by age or length of membership)?
-4. What actions would most likely improve member retention?
+1.  How satisfied are members overall, and which service areas score highest and lowest?
+2.  Which factors are most strongly related to overall satisfaction?
+3.  Do satisfaction levels differ across member groups (for example, by age or length of membership)?
+4.  What actions would most likely improve member retention?
 
-**Expected impact**
-The findings will help leadership prioritize the service areas that matter most to members, which supports retention and more focused marketing spending.
+**Expected impact** The findings will help leadership prioritize the service areas that matter most to members, which supports retention and more focused marketing spending.
 
 **Methods**
 
@@ -111,27 +103,22 @@ The findings will help leadership prioritize the service areas that matter most 
 
 ### Project C: TRI LA Wildfire Recovery, Tracking and Analytics Strategy
 
-**Data and source**
-Google Analytics 4 website data and Mailchimp email campaign data from the Trauma Resource Institute (TRI), a nonprofit, covering June to December 2025.
+**Data and source** Google Analytics 4 website data and Mailchimp email campaign data from the Trauma Resource Institute (TRI), a nonprofit, covering June to December 2025.
 
-**Managerial problem**
-TRI offers free wildfire recovery resources and workshops for people affected by the Los Angeles wildfires, including Altadena-area communities. The organization needed to know which outreach efforts were actually connecting survivors with those resources, and where people were dropping off before registering.
+**Managerial problem** TRI offers free wildfire recovery resources and workshops for people affected by the Los Angeles wildfires, including Altadena-area communities. The organization needed to know which outreach efforts were actually connecting survivors with those resources, and where people were dropping off before registering.
 
-**Target audience**
-TRI leadership and its outreach team, with results that could also support future grant funding.
+**Target audience** TRI leadership and its outreach team, with results that could also support future grant funding.
 
 **Research questions**
 
-1. Where do website visitors come from, and which wildfire recovery pages do they engage with?
-2. Where do visitors drop off before registering for workshops or requesting training?
-3. Which email campaigns and messages generate the most engagement?
-4. How can email and website data be connected to show which campaigns drive results?
+1.  Where do website visitors come from, and which wildfire recovery pages do they engage with?
+2.  Where do visitors drop off before registering for workshops or requesting training?
+3.  Which email campaigns and messages generate the most engagement?
+4.  How can email and website data be connected to show which campaigns drive results?
 
-**Key findings**
-Across 26 Mailchimp campaigns, TRI delivered 103,952 emails with a 46.13% average open rate, a 7.51% average click rate, and 44,062 total clicks. GA4 showed 979 active users from LA-area cities (825 of them new) from June to November 2025, with an average engagement time of 3 minutes and 32 seconds. However, many visitors engaged with recovery information without moving on to registration or training request forms. About 86% of traffic came from direct and organic search, while social media brought in very little.
+**Key findings** Across 26 Mailchimp campaigns, TRI delivered 103,952 emails with a 46.13% average open rate, a 7.51% average click rate, and 44,062 total clicks. GA4 showed 979 active users from LA-area cities (825 of them new) from June to November 2025, with an average engagement time of 3 minutes and 32 seconds. However, many visitors engaged with recovery information without moving on to registration or training request forms. About 86% of traffic came from direct and organic search, while social media brought in very little.
 
-**Expected impact**
-Our group recommended improving the training request form, adding clearer calls to action, improving SEO and navigation, standardizing UTM naming, and connecting email and website analytics for better attribution. These changes would help TRI reach more survivors and show measurable outcomes to funders.
+**Expected impact** Our group recommended improving the training request form, adding clearer calls to action, improving SEO and navigation, standardizing UTM naming, and connecting email and website analytics for better attribution. These changes would help TRI reach more survivors and show measurable outcomes to funders.
 
 **Methods**
 
@@ -152,14 +139,14 @@ The resume tab will display my current resume on the page and include a download
 ## Timeline
 
 | Step | Target |
-|---|---|
+|------------------------------------|------------------------------------|
 | Set up site structure and theme | Done (from M10 practice) |
 | Install GA4 tracking on the live site | As soon as possible so data can build up |
 | Build project pages and listings | Throughout the term |
 | Complete traffic analysis and RevealJS deck | Before the final deadline |
 | Final review and video submission | Week 16 |
 
-##Repo file:
-https://github.com/Buenoalexa11/IBM6500/blob/main/portfolio-proposal.qmd
-##Live page: 
-https://buenoalexa11.github.io/IBM6500/portfolio-proposal.html
+## Links
+
+- Repo file: [https://github.com/Buenoalexa11/IBM6500/blob/main/portfolio-proposal.qmd](https://github.com/Buenoalexa11/IBM6500/blob/main/portfolio-proposal.qmd)
+- Live page: [https://buenoalexa11.github.io/IBM6500/portfolio-proposal.html](https://buenoalexa11.github.io/IBM6500/portfolio-proposal.html)
