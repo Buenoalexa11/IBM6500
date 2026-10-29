@@ -1,0 +1,45 @@
+/*-- scss:defaults --*/
+
+// Custom theme layered on top of the ready-made "serif" theme
+$cpp-green: #1E4D2B;
+$cpp-gold: #C8A951;
+$cream: #F6F1E3;
+$ink: #2B2B2B;
+
+$body-bg: $cream;
+$body-color: $ink;
+$link-color: $cpp-green;
+$presentation-heading-color: $cpp-green;
+$presentation-heading-font: "Georgia", "Times New Roman", serif;
+$font-family-sans-serif: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+$presentation-font-size-root: 40px;
+$code-block-bg: #FFFDF7;
+$code-block-border-color: $cpp-gold;
+
+/*-- scss:rules --*/
+
+.reveal h1,
+.reveal h2 {
+  letter-spacing: 0.01em;
+}
+
+.reveal h2 {
+  border-bottom: 3px solid $cpp-gold;
+  padding-bottom: 0.15em;
+}
+
+.reveal .slide-number {
+  background-color: $cpp-green;
+  color: $cream;
+}
+
+.reveal .footer {
+  color: $cpp-green;
+  font-style: italic;
+}
+
+// Softer highlight color for fragments
+.reveal .slides section .fragment.highlight-green.visible {
+  color: #2E7D32;
+  font-weight: bold;
+}

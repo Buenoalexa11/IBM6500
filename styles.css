@@ -1,0 +1,48 @@
+/* Extra CSS for the W10 reflection deck */
+
+/* Box that shows each essay prompt to the audience */
+.prompt-box {
+  background-color: #1E4D2B;
+  color: #F6F1E3;
+  border-left: 10px solid #C8A951;
+  border-radius: 6px;
+  padding: 0.6em 0.9em;
+  margin-bottom: 0.6em;
+  font-size: 0.9em;
+}
+
+.prompt-box strong {
+  color: #C8A951;
+}
+
+/* Box for key takeaways */
+.takeaway {
+  background-color: #FFFDF7;
+  border: 2px solid #C8A951;
+  border-radius: 6px;
+  padding: 0.5em 0.8em;
+  margin-top: 0.5em;
+}
+
+/* Big number used on the sample size slides */
+.big-number {
+  font-size: 2.2em;
+  font-weight: bold;
+  color: #1E4D2B;
+  line-height: 1.1;
+}
+
+.muted {
+  color: #6B6B6B;
+  font-size: 0.8em;
+}
+
+/* Tables */
+.reveal table {
+  font-size: 0.75em;
+}
+
+.reveal table th {
+  background-color: #1E4D2B;
+  color: #F6F1E3;
+}
