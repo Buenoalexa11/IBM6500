@@ -1,0 +1,43 @@
+---
+title: "Class Notes - Guest Lecture Travis Miller"
+author: "Alexa Bueno"
+date: "2026-10-29"
+format: html
+---
+
+## Guest Lecture: Travis Miller – Market Research Careers
+
+### Overview
+
+- Intro to market research careers, industry paths, new tech, and ways to gain experience.
+
+### Insights Association – West Chapter
+
+- Covers 7 metro areas: San Diego, Orange County, LA, Ventura, SF, Portland, Seattle.
+- Student membership is free.
+- Benefits: networking with professionals, internships, events, and occasional conference sponsorships.
+
+### Career Paths
+
+- Research agencies, tech vendors, brand-side (in-house) research, client-facing account roles, entrepreneurship.
+- Agencies give broad experience: project management, survey design, analysis, reporting.
+
+### How to Prepare
+
+- **Skills:** statistics, economics, business,
+
+## Dr. Jung – Assignment Updates
+
+- Some assignments are being excluded.
+- Remaining assignments are being rearranged.
+- Some assignments have been switched.
+
+**Links**
+
+- Repo: <https://github.com/Buenoalexa11/IBM6500>
+
+- .qmd file: <https://github.com/Buenoalexa11/IBM6500/blob/main/Class-Notes-Guest-Lecture-Travis-Miller.qmd>
+
+- Rendered page: <https://buenoalexa11.github.io/IBM6500/Class-Notes-Guest-Lecture-Travis-Miller.html>
+
+------------------------------------------------------------------------
