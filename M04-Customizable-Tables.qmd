@@ -1,0 +1,283 @@
+---
+title: "M04-Customizable-Tables"
+subtitle: "M05-Visualizing Data with Tables for MSDM CEP"
+author: "Alexa Bueno"
+date: '`r format(Sys.time())`'
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 3
+    toc-expand: true
+    number-sections: true
+    code-link: true
+    code-fold: true
+    code-tools: true
+    code-overflow: wrap
+    embed-resources: true
+editor: visual
+execute:
+  freeze: auto
+---
+
+```{r}
+#| label: setup
+#| echo: false
+#| message: false
+#| warning: false
+
+# Packages used in this report
+library(gt)        # building the tables
+library(gtExtras)  # sparklines, themes, and other table add-ons
+library(dplyr)     # data wrangling
+```
+
+# Overview
+
+This report reflects on what I learned in the module on **highly customizable tables** and applies it using the `{gt}` and `{gtExtras}` packages in R. Each section starts with the prompt from the assignment, followed by my response.
+
+::: callout-note
+## About the data
+
+My MSDM CEP is with Wellness Ranch, and the analytics objective I own (AO1) compares SEO performance before and after the website changes our team is implementing. That data is not ready yet, so following the instructions, I used the `pizzaplace` dataset that comes built into the `{gt}` package.[^1]
+:::
+
+[^1]: The `pizzaplace` dataset contains every pizza sold at a fictional pizza place during 2015, including the date, time, pizza name, size, type, and price.
+
+# Essay Responses
+
+## Summary of the videos
+
+> **Prompt:** Summarize what you learned from the videos you watched.
+
+The main video, *Making Beautiful Tables with {gt}*, walked through building a table step by step instead of all at once. A few things stood out to me:
+
+1.  **Structure first.** `gt()` turns a data frame into a table, and `rowname_col()` creates a stub so each row has a clear label. `tab_stubhead()` then gives that stub its own heading.
+2.  **Labels and headers.** `tab_header()` adds a title and subtitle (and it accepts Markdown), and `cols_label()` swaps raw variable names like `avg_price` for readable labels.
+3.  **Number formatting.** `fmt_number()`, `fmt_currency()`, and `fmt_percent()` handle decimals, dollar signs, and percentages, so I don't have to round or paste symbols in the data itself.
+4.  **Notes.** `tab_source_note()` credits where the data came from, and `tab_footnote()` attaches a footnote to a specific cell or column, with the marks numbered automatically.
+5.  **Styling.** `tab_style()`, `opt_table_font()`, and `data_color()` change how the table looks, and `data_color()` scales the cell color based on the values.
+
+The biggest takeaway for me is that `{gt}` works like `{ggplot2}`: you start with the data and keep adding layers with the pipe until the table says what you want it to say.
+
+## What I liked about gt and gtExtras
+
+> **Prompt:** What did you like about the gt and gtExtras packages demonstrated in the videos?
+
+What I liked most about `{gt}` is how readable the code is. Each function does one thing, so when something looks off it is easy to find the line responsible. I also liked that it fits into a normal `{dplyr}` workflow, so I can wrangle the data and pipe it straight into the table.
+
+`{gtExtras}` saves a lot of time. Functions like `gt_plt_sparkline()` put a small trend line inside a cell, and themes like `gt_theme_538()` make a table look polished with one line of code. Being able to show a number and a mini chart side by side in the same row is something I would normally have to build in a separate tool.
+
+## How tables complement charts
+
+> **Prompt:** How do tables complement charts for data visualization?
+
+Charts are good at showing the overall pattern quickly, like a trend going up or one category being much bigger than another. Tables are better when the audience needs the exact values. In my work in ecommerce, a chart might show that one product line is growing, but the manager still wants to know the exact revenue and order count before making a decision.
+
+Using both together covers each other's weak spots. The chart gets attention and shows the story, and the table backs it up with precise numbers. `{gtExtras}` blurs the line a bit, since a sparkline inside a table gives you the trend and the exact values in one place.
+
+## When to use tables instead of charts
+
+> **Prompt:** Under what circumstances would you prefer to use tables rather than charts to visualize data?
+
+I would choose a table when:
+
+-   the audience needs to look up or compare **exact values**, such as revenue by category;
+-   there are **several measures** with different units (counts, dollars, percentages) that would be confusing on one chart;
+-   the data has only a **small number of rows**, where a chart would add little; or
+-   the output is a **reference** people will come back to, like an appendix in a report.
+
+If the main point is a trend over time or a big difference between groups, I would lead with a chart and use a table for the supporting details.
+
+# Descriptive Statistics Table
+
+> **Prompt:** Pick some variables relevant to your Analytics Objectives and share some descriptive statistics using gt and gtExtra functions together to show numbers and small charts in one table.
+
+## Variables
+
+I treated the pizza place like a small ecommerce business and picked variables a marketing team would look at to decide which products to promote:
+
+| Variable         | Type        | How I used it                                  |
+|------------------|-------------|------------------------------------------------|
+| `type`           | Categorical | Grouping variable (classic, chicken, supreme, veggie) |
+| `size`           | Categorical | Second grouping variable for the size table    |
+| `price`          | Numeric     | Revenue, average price, and share of revenue   |
+| `id`             | ID          | Counting distinct orders                       |
+| `date`           | Date        | Monthly revenue trend for the sparkline        |
+
+## Data wrangling
+
+Before piping into `gt()`, I grouped the data by pizza type with `group_by()` and calculated the summary statistics. For the sparkline, `{gtExtras}` needs the monthly values stored as a list column, so I built those separately and joined them in.
+
+```{r}
+#| label: wrangle
+#| message: false
+
+# Summary statistics for each pizza type
+type_summary <- pizzaplace |>
+  group_by(type) |>
+  summarise(
+    orders      = n_distinct(id),   # orders that included this type
+    pizzas_sold = n(),              # each row is one pizza
+    revenue     = sum(price),
+    avg_price   = mean(price),
+    .groups = "drop"
+  ) |>
+  mutate(rev_share = revenue / sum(revenue))
+
+# Monthly revenue for each type, stored as a list column for the sparkline
+monthly_trend <- pizzaplace |>
+  mutate(month = as.integer(format(as.Date(date), "%m"))) |>
+  group_by(type, month) |>
+  summarise(month_rev = sum(price), .groups = "drop") |>
+  arrange(type, month) |>
+  group_by(type) |>
+  summarise(monthly_rev = list(month_rev), .groups = "drop")
+
+# Join the two and capitalize the type names for the table
+type_table <- type_summary |>
+  left_join(monthly_trend, by = "type") |>
+  mutate(type = tools::toTitleCase(type)) |>
+  arrange(desc(revenue))
+
+# Summary by size for the second table
+size_table <- pizzaplace |>
+  mutate(size = factor(size, levels = c("S", "M", "L", "XL", "XXL"))) |>
+  group_by(size) |>
+  summarise(
+    pizzas_sold = n(),
+    revenue     = sum(price),
+    avg_price   = mean(price),
+    .groups = "drop"
+  ) |>
+  mutate(rev_share = revenue / sum(revenue))
+```
+
+## The tables
+
+The main table is @tbl-type. @tbl-size gives a quick look at sales by size as a supporting view.
+
+::: panel-tabset
+### By pizza type
+
+```{r}
+#| label: tbl-type
+#| tbl-cap: "Pizza sales by type, 2015"
+
+type_table |>
+  gt(rowname_col = "type") |>
+  # Title and subtitle
+  tab_header(
+    title = md("**Which pizza types drive revenue?**"),
+    subtitle = "Sales volume, revenue, and monthly trend by pizza type, 2015"
+  ) |>
+  # Stub head label
+  tab_stubhead(label = "Pizza Type") |>
+  # Spanner column labels
+  tab_spanner(label = "Volume", columns = c(orders, pizzas_sold)) |>
+  tab_spanner(label = "Revenue", columns = c(revenue, avg_price, rev_share)) |>
+  # Readable column labels
+  cols_label(
+    orders      = "Orders",
+    pizzas_sold = "Pizzas Sold",
+    revenue     = "Total Revenue",
+    avg_price   = "Avg. Price",
+    rev_share   = "Share of Revenue",
+    monthly_rev = "Monthly Revenue Trend"
+  ) |>
+  # Number formats: 2 decimals and currency signs where it applies
+  fmt_number(columns = c(orders, pizzas_sold), decimals = 0) |>
+  fmt_currency(columns = c(revenue, avg_price), currency = "USD", decimals = 2) |>
+  fmt_percent(columns = rev_share, decimals = 2) |>
+  # Color the revenue column by value
+  data_color(columns = revenue, palette = c("#eef4fb", "#2c6fbb")) |>
+  # Small chart inside the table (gtExtras)
+  gt_plt_sparkline(monthly_rev, same_limit = TRUE) |>
+  # Footnotes and source note
+  tab_footnote(
+    footnote = "Counts each order that included at least one pizza of this type.",
+    locations = cells_column_labels(columns = orders)
+  ) |>
+  tab_footnote(
+    footnote = "Average selling price per pizza across all sizes.",
+    locations = cells_column_labels(columns = avg_price)
+  ) |>
+  tab_source_note(source_note = md("Source: `pizzaplace` dataset from the {gt} package")) |>
+  # Bold the stub so the type names stand out
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_stub()
+  ) |>
+  opt_align_table_header(align = "left") |>
+  opt_table_font(font = google_font("Lato"))
+```
+
+### By pizza size
+
+```{r}
+#| label: tbl-size
+#| tbl-cap: "Pizza sales by size, 2015"
+
+size_table |>
+  gt(rowname_col = "size") |>
+  tab_header(
+    title = md("**Sales by pizza size**"),
+    subtitle = "Volume and revenue by pizza size, 2015"
+  ) |>
+  tab_stubhead(label = "Size") |>
+  tab_spanner(label = "Revenue", columns = c(revenue, avg_price, rev_share)) |>
+  cols_label(
+    pizzas_sold = "Pizzas Sold",
+    revenue     = "Total Revenue",
+    avg_price   = "Avg. Price",
+    rev_share   = "Share of Revenue"
+  ) |>
+  fmt_number(columns = pizzas_sold, decimals = 0) |>
+  fmt_currency(columns = c(revenue, avg_price), currency = "USD", decimals = 2) |>
+  fmt_percent(columns = rev_share, decimals = 2) |>
+  data_color(columns = pizzas_sold, palette = c("#fff4e6", "#e07b00")) |>
+  tab_source_note(source_note = md("Source: `pizzaplace` dataset from the {gt} package")) |>
+  gt_theme_538()
+```
+:::
+
+::: callout-tip
+## Reading the main table
+
+Start with the **Share of Revenue** column to see which types matter most, then check the sparkline to see whether that revenue is steady across the year or concentrated in a few months.
+:::
+
+## gt and gtExtras features used
+
+| Requirement                       | Function used                                  |
+|-----------------------------------|------------------------------------------------|
+| Title and subtitle                | `tab_header()`                                 |
+| Stub head label                   | `tab_stubhead()`                               |
+| Relabeled variables               | `cols_label()`                                 |
+| Source note                       | `tab_source_note()`                            |
+| Footnotes                         | `tab_footnote()`                               |
+| Spanner column label              | `tab_spanner()`                                |
+| 2 decimals and currency signs     | `fmt_currency()`, `fmt_percent()`, `fmt_number()` |
+| Colored numeric column            | `data_color()`                                 |
+| Small chart in the table          | `gt_plt_sparkline()` from `{gtExtras}`         |
+| Additional functions              | `tab_style()`, `opt_table_font()`, `opt_align_table_header()`, `gt_theme_538()` |
+
+# Why This Table Belongs in My MSDM Project
+
+> **Prompt:** Explain why the table is worth adding to your MSDM project written report or presentation slides.
+
+A table like @tbl-type is useful because it answers several questions at once. In one view, the reader sees how much each category sells, how much revenue it brings in, its share of the total, and whether it is trending up or down. In a presentation, that saves me from switching between four separate charts.
+
+For my CEP, I plan to use the same layout for AO1. Instead of pizza types, the rows would be the Wellness Ranch pages or keywords we optimized. The columns would compare search performance before and after the changes, such as clicks, impressions, and average position, with a sparkline showing the weekly trend for each page. The client is a nonprofit and not a data team, so a clean table with clear labels, notes on where the numbers come from, and color that points to the biggest changes would make our results easier to follow than raw exports from Search Console or GA4.
+
+::: callout-important
+## Next step for the CEP
+
+Once our team has enough post-change data, I will swap `pizzaplace` for the Wellness Ranch SEO data and reuse this code with the new variables.
+:::
+
+# Appendix {.unnumbered}
+
+-   GitHub Repo: <https://github.com/Buenoalexa11/IBM6500>
+-   QMD file: <https://github.com/Buenoalexa11/IBM6500/blob/main/M04-Customizable-Tables.qmd>
+-   GitHub Pages: <https://buenoalexa11.github.io/IBM6500/M04-Customizable-Tables.html>
