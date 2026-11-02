@@ -1,0 +1,572 @@
+---
+title: "Confirmatory Factor Analysis in R: Study Note"
+author: "Alexa Bueno"
+date: today
+format:
+  html:
+    toc: true
+    number-sections: true
+    embed-resources: true
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+# Introduction
+
+## Purpose of the Assignment
+
+This study note follows the UCLA OARC seminar *Confirmatory Factor Analysis (CFA) in R with lavaan*. I watched the seminar, coded along in R, and organized my work here so I can come back to it the next time I need to run or review a CFA.
+
+The example data is the SAQ-8, an eight-item "SPSS Anxiety Questionnaire." The question running through the whole seminar is whether these eight items actually measure one thing (SPSS anxiety), or whether the structure is more complicated than that.
+
+To make this stick, I kept a marketing version of the same problem in mind. If a brand runs a customer survey with items like "I would recommend this store," "I'm happy with my last order," and "I plan to shop here again," it is assuming those questions all measure one underlying thing, like customer satisfaction. CFA is how you test whether that assumption actually holds before you average the items into a score and start making decisions with it.
+
+## Confirmatory Factor Analysis and Exploratory Factor Analysis
+
+Exploratory factor analysis (EFA) lets the data tell you how many factors there are and which items go with which factor. It is useful when a scale is new and you don't know its structure yet.
+
+Confirmatory factor analysis (CFA) works the other way around. You decide the structure ahead of time (which items load on which factor, and whether factors are correlated), and then test whether the data supports that structure. In the survey example above, EFA would be "let's see what groupings show up," while CFA would be "we believe these four items measure satisfaction, so let's check."
+
+# Data and Software
+
+## Required Packages
+
+```{r}
+# haven reads SPSS (.sav) files into R
+library(haven)
+
+# lavaan fits latent variable models, including CFA
+library(lavaan)
+```
+
+## Importing the SAQ-8 Data
+
+The data is an SPSS file hosted by UCLA. The UCLA page reads it with `foreign::read.spss()`, but this assignment asks for haven, so I used `read_sav()` instead.
+
+```{r}
+# Read the SPSS file straight from the UCLA server
+# (if this link ever breaks, try swapping "stats.idre" for "stats.oarc")
+dat <- read_sav("https://stats.idre.ucla.edu/wp-content/uploads/2018/05/SAQ.sav")
+
+# haven keeps SPSS value labels attached to each column.
+# zap_labels() strips them so every item is a plain number,
+# which cov(), cor(), and cfa() need.
+dat <- zap_labels(dat)
+
+# Keep the eight items used in the seminar
+items <- c("q01", "q02", "q03", "q04", "q05", "q06", "q07", "q08")
+dat8 <- dat[, items]
+```
+
+`zap_labels()` does the same job as `use.value.labels = FALSE` in the UCLA code. Without it, R would treat the answers as labeled categories instead of numbers.
+
+## Examining the Data
+
+```{r}
+# Structure: variable names and types
+str(dat8)
+
+# First several observations
+head(dat8)
+```
+
+The data has `r nrow(dat8)` respondents and eight items, each answered on a 1 to 5 Likert-type scale.
+
+```{r}
+# Correlation matrix of the eight items, rounded to 2 decimals
+round(cor(dat8), 2)
+```
+
+```{r}
+# Covariance matrix of items 3, 4, and 5 (used for the first CFA)
+round(cov(dat8[, c("q03", "q04", "q05")]), 2)
+```
+
+What the correlation matrix tells me:
+
+- Most items are positively correlated with each other, many at around 0.30 or higher, which the seminar describes as a medium effect size. That is a sign the items share something in common, which is what factor analysis is looking for.
+- Items 2 and 3 are the odd ones out. They correlate positively with each other but negatively with the other six items. Item 3 ("Standard deviations excite me") is worded in the opposite direction from the rest, so a negative relationship makes sense: someone anxious about statistics would disagree with it.
+- Item 2 has weak correlations with almost everything (the largest is about `r round(max(abs(cor(dat8)["q02", -2])), 2)` in absolute value), which is an early hint it might not fit well with the others.
+- Items 6 and 7 have the strongest correlation in the table (`r round(cor(dat8$q06, dat8$q07), 2)`), which becomes important later when we test a two-factor model.
+- The matrix is symmetric, so the correlation of q06 with q07 is the same as q07 with q06. This matters later for counting how many unique values we actually have.
+
+The covariance matrix works the same way, except it is not standardized. The diagonal shows each item's variance and the off-diagonals show covariances. CFA is fit to the covariance matrix, not the correlation matrix.
+
+# CFA Concepts
+
+## Observed Indicators and Latent Factors
+
+- An observed indicator is something we actually measure. Here, each survey item (q01 to q08) is an indicator.
+- A latent factor is something we can't measure directly but believe causes people's answers. Here, the factor is SPSS anxiety.
+
+In a business setting, "brand loyalty" or "purchase intent" would be latent factors, and the survey questions or behaviors we use to capture them would be the indicators.
+
+## The Measurement Model
+
+The CFA measurement model is basically a regression where the predictor is unobserved. For one item:
+
+$$y_1 = \tau_1 + \lambda_1 \eta + \epsilon_1$$
+
+| Symbol | Name | Meaning in the SAQ example |
+|---|---|---|
+| $y$ | item | a person's answer to one question |
+| $\tau$ | intercept | the item's mean |
+| $\lambda$ | loading | how strongly the factor drives the item |
+| $\eta$ | factor | SPSS anxiety (unobserved) |
+| $\epsilon$ | residual | the part of the answer the factor doesn't explain |
+
+The main differences from regular regression are that the outcomes are items instead of people, there are several outcomes at once, and the predictor is not observed.
+
+## The Model-Implied Covariance Matrix
+
+Since CFA is fit to the covariance matrix, the key equation is:
+
+$$\Sigma(\theta) = \Lambda \Psi \Lambda' + \Theta_\epsilon$$
+
+- $\Lambda$ holds the loadings.
+- $\Psi$ holds the factor variance (and factor covariances if there is more than one factor).
+- $\Theta_\epsilon$ holds the residual variances. Residual covariances are usually set to zero.
+
+The idea is that if the model is right, the covariances it implies, $\Sigma(\theta)$, should be close to the covariances we actually see in the data. Model fit is basically measuring that gap.
+
+## Path Diagrams
+
+Path diagrams are a visual version of the same model:
+
+| Symbol | Meaning |
+|---|---|
+| Circle | latent factor |
+| Square | observed item |
+| One-way arrow | loading (factor predicts item) |
+| Two-way arrow | variance or covariance |
+
+For the three-item model, one circle (SPSS anxiety) has arrows pointing to three squares (q03, q04, q05). Each square also has its own residual, and the factor has a variance.
+
+<!-- Optional: insert a screenshot of the UCLA path diagram here.
+Save it in the images/ folder, then use:
+![Three-item one-factor CFA path diagram (UCLA OARC)](images/cfa-path-diagram.png)
+-->
+
+## Model Identification and Degrees of Freedom
+
+This was the part I had to slow down for, so I broke it into terms.
+
+- Known values: the unique numbers in the covariance matrix. With $p$ items, that is $p(p+1)/2$.
+- Free parameters: values the model estimates from the data.
+- Fixed parameters: values we set ahead of time (usually to 0 or 1) so they aren't estimated.
+- Degrees of freedom (df) = known values minus free parameters.
+
+$$\text{df} = \text{known values} - \text{free parameters}$$
+
+| df | Name | What it means |
+|---|---|---|
+| Negative | Under-identified | More unknowns than information. The model can't be estimated. |
+| Zero | Just-identified (saturated) | Uses all the information. It reproduces the data perfectly, so fit can't be tested. |
+| Positive | Over-identified | Information left over, so fit can be tested. This is what we want. |
+
+Worked example for the three-item model (q03, q04, q05):
+
+- Known values: $3(3+1)/2 = 6$ (3 variances and 3 covariances).
+- If we tried to estimate everything in $\Sigma(\theta)$: 3 loadings, 1 factor variance, and 6 residual variances and covariances, which is 10 parameters. That gives $6 - 10 = -4$, so the model is under-identified.
+- Fixing the three residual covariances to 0 leaves 7 parameters (3 loadings, 1 factor variance, 3 residual variances). Still $6 - 7 = -1$.
+- The last extra parameter exists because the factor isn't observed, so it has no natural scale. We fix one more thing to give it a scale. That leaves 6 free parameters and $6 - 6 = 0$ df.
+
+There are two standard ways to set that scale:
+
+- Marker method: fix the first loading to 1. The factor takes on the scale of that item. This is lavaan's default.
+- Variance standardization method: fix the factor variance to 1 and estimate all loadings freely.
+
+Both methods give the same df and the same fit. They only change how the estimates are scaled.
+
+# One-Factor CFA
+
+## Three-Item Model
+
+### Model Specification
+
+In lavaan, `=~` means "is measured by." So this line:
+
+```r
+f =~ q03 + q04 + q05
+```
+
+says "a factor called `f` is measured by items q03, q04, and q05." The factor name on the left is made up, and the item names on the right have to match the column names in the data.
+
+```{r}
+# Model 1a: one factor, three items, marker method (lavaan's default)
+# The loading of q03 is automatically fixed to 1
+m1a <- 'f =~ q03 + q04 + q05'
+
+onefac3items_a <- cfa(m1a, data = dat8)
+summary(onefac3items_a)
+```
+
+```{r}
+# Model 1b: same model, variance standardization method
+#   NA*q03  frees the first loading (overrides the marker default)
+#   f ~~ 1*f fixes the factor variance to 1
+m1b <- '
+  f =~ NA*q03 + q04 + q05
+  f ~~ 1*f
+'
+
+onefac3items_b <- cfa(m1b, data = dat8)
+summary(onefac3items_b)
+```
+
+Comparing the two:
+
+- In `m1a`, the q03 loading is exactly 1 and the factor variance is estimated (`r round(lavInspect(onefac3items_a, "est")$psi[1,1], 3)`).
+- In `m1b`, the factor variance is exactly 1 and all three loadings are estimated.
+- The residual variances are identical in both models, and both have `r fitMeasures(onefac3items_a, "df")` degrees of freedom.
+
+So the two methods are the same model, just scaled differently. A shortcut for `m1b` is to keep `m1a` and add `std.lv = TRUE` to `cfa()`, which I use later.
+
+### Standardized Solution
+
+```{r}
+# Request standardized estimates alongside the raw ones
+summary(onefac3items_a, standardized = TRUE)
+
+# Condensed table of the fully standardized solution (Std.all)
+standardizedSolution(onefac3items_a)
+```
+
+```{r}
+# Model-implied covariance matrix
+fitted(onefac3items_a)$cov
+```
+
+### Interpretation
+
+```{r}
+#| echo: false
+# Pull standardized loadings and residuals for the text below
+std1 <- standardizedSolution(onefac3items_a)
+load1 <- std1[std1$op == "=~", ]
+resid1 <- std1[std1$op == "~~" & std1$lhs == std1$rhs & std1$lhs != "f", ]
+```
+
+Two new columns show up with `standardized = TRUE`:
+
+- `Std.lv` standardizes only the factor, so it matches the variance standardization method.
+- `Std.all` standardizes both the factor and the item. These are the easiest to read, because they work roughly like correlations between each item and the factor.
+
+The standardized loadings are `r round(load1$est.std[1], 2)` for q03, `r round(load1$est.std[2], 2)` for q04, and `r round(load1$est.std[3], 2)` for q05. Item 4 is the strongest indicator of the factor. Item 3 loads in the opposite direction from items 4 and 5, which matches its reverse wording.
+
+The standardized residual variances (`r round(resid1$est.std[1], 2)`, `r round(resid1$est.std[2], 2)`, and `r round(resid1$est.std[3], 2)`) show the share of each item's variance the factor does not explain. For q03, about `r round(100 * resid1$est.std[1])`% of the variance is left unexplained.
+
+The model-implied covariance matrix is the same as the observed covariance matrix from earlier. That is because this model has 0 df, so it uses all the available information and reproduces the data exactly. It doesn't mean the model is "perfect." It just means there is nothing left over to test it against.
+
+## Eight-Item Model
+
+```{r}
+# Model 3a: one factor measured by all eight items
+# std.lv = TRUE uses the variance standardization method
+m3a <- 'f =~ q01 + q02 + q03 + q04 + q05 + q06 + q07 + q08'
+
+onefac8items <- cfa(m3a, data = dat8, std.lv = TRUE)
+
+# fit.measures = TRUE adds CFI, TLI, RMSEA, and more
+summary(onefac8items, fit.measures = TRUE, standardized = TRUE)
+```
+
+```{r}
+#| echo: false
+std8 <- standardizedSolution(onefac8items)
+load8 <- std8[std8$op == "=~", c("rhs", "est.std")]
+fm8 <- fitMeasures(onefac8items, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "rmsea.ci.lower", "rmsea.ci.upper", "srmr"))
+```
+
+Loadings and residual variances:
+
+- The strongest standardized loading is q04 (`r round(load8$est.std[load8$rhs == "q04"], 2)`) and the weakest is q02 (`r round(load8$est.std[load8$rhs == "q02"], 2)`).
+- Items 2 and 3 load negatively, which matches what the correlation matrix showed.
+- Item 2's loading is low enough that the factor explains very little of it. Its standardized residual variance is `r round(std8$est.std[std8$op == "~~" & std8$lhs == "q02" & std8$rhs == "q02"], 2)`, so almost all of its variance is unexplained.
+
+Degrees of freedom: 8 items give $8(9)/2 = 36$ known values. The model estimates 8 loadings and 8 residual variances (the factor variance is fixed to 1), for 16 free parameters. That leaves $36 - 16 = 20$ df, which matches the output (`r fm8["df"]`). Because the model is over-identified, we can test its fit now.
+
+## Model-Fit Statistics
+
+The fit tests whether the model-implied covariance matrix matches the observed one:
+
+$$H_0: \Sigma(\theta) = \Sigma \qquad H_1: \Sigma(\theta) \neq \Sigma$$
+
+This is backwards from most hypothesis tests. Here we want to fail to reject, because rejecting means the model doesn't match the data.
+
+| Statistic | What it compares | Common guideline |
+|---|---|---|
+| Model chi-square | Model vs. observed data | Non-significant p-value is good, but very sensitive to large samples |
+| CFI | Model vs. a worst-case baseline model | 0.90 or above, 0.95 to be conservative |
+| TLI | Same idea as CFI, with a penalty for complexity | 0.90 or above |
+| RMSEA | Misfit per degree of freedom (absolute) | 0.05 or below is close fit, 0.10 or above is poor |
+
+```{r}
+# Pull just the main fit statistics
+round(fitMeasures(onefac8items, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "srmr")), 3)
+```
+
+```{r}
+# Residual correlations: where does the model miss?
+# Values far from 0 show item pairs the model doesn't reproduce well
+round(residuals(onefac8items, type = "cor")$cov, 2)
+```
+
+## Interpretation
+
+Looking at the fit statistics together:
+
+- Chi-square is `r round(fm8["chisq"], 1)` on `r fm8["df"]` df, p `r ifelse(fm8["pvalue"] < .001, "< .001", paste("=", round(fm8["pvalue"], 3)))`. By chi-square alone, the model is rejected. With `r nrow(dat8)` respondents, though, chi-square will flag almost any small difference, so I didn't rely on it by itself.
+- CFI is `r round(fm8["cfi"], 3)` and TLI is `r round(fm8["tli"], 3)`, both below the 0.90 guideline.
+- RMSEA is `r round(fm8["rmsea"], 3)` (90% CI `r round(fm8["rmsea.ci.lower"], 3)` to `r round(fm8["rmsea.ci.upper"], 3)`), which falls in the poor-fit range.
+
+All three point the same way, so my conclusion is that one factor does not represent these eight items well. Item 2 is weak, and the residual correlation between q06 and q07 is one of the largest in the table, which suggests those two items share something the single factor isn't capturing. That leads into the two-factor model.
+
+# Two-Factor CFA
+
+Based on the one-factor results, the seminar drops item 2 and splits the remaining items into two factors:
+
+- f1, SPSS anxiety: q01, q03, q04, q05, q08
+- f2, attribution bias: q06, q07
+
+f2 only has two items, which creates an identification problem. A two-item factor on its own doesn't have enough information. The seminar gives two ways around this:
+
+1. Fix the factor variance to 1 and force the two loadings to be equal.
+2. Let the two-item factor correlate with another factor, which borrows information from that factor.
+
+## Uncorrelated Factors
+
+```{r}
+# Model 4a: two uncorrelated factors
+#   a*q06 + a*q07  gives both loadings the same label, so they're forced equal
+#   f1 ~~ 0*f2     fixes the factor covariance to 0 (uncorrelated)
+m4a <- '
+  f1 =~ q01 + q03 + q04 + q05 + q08
+  f2 =~ a*q06 + a*q07
+  f1 ~~ 0*f2
+'
+
+twofac_uncor <- cfa(m4a, data = dat8, std.lv = TRUE)
+summary(twofac_uncor, fit.measures = TRUE, standardized = TRUE)
+```
+
+Since the factors are uncorrelated, only option 1 works here, which is why the q06 and q07 loadings are constrained to be equal.
+
+Degrees of freedom: 7 items give 28 known values. The model estimates 7 residual variances and 7 loadings, but because q06 and q07 share one loading, only 13 parameters are actually free. That leaves 15 df.
+
+```{r}
+#| echo: false
+fm4a <- fitMeasures(twofac_uncor, c("chisq", "df", "cfi", "tli", "rmsea"))
+```
+
+This model fits worse than the one-factor model: CFI `r round(fm4a["cfi"], 3)`, TLI `r round(fm4a["tli"], 3)`, and RMSEA `r round(fm4a["rmsea"], 3)`. Forcing the two factors to be completely unrelated doesn't make sense if both are types of anxiety.
+
+## Correlated Factors
+
+```{r}
+# Model 4b: two correlated factors
+# lavaan lets factors correlate by default.
+# std.lv = TRUE fixes both factor variances to 1 (variance standardization),
+# and f2 is identified through its correlation with f1.
+m4b <- '
+  f1 =~ q01 + q03 + q04 + q05 + q08
+  f2 =~ q06 + q07
+'
+
+twofac_cor <- cfa(m4b, data = dat8, std.lv = TRUE)
+summary(twofac_cor, fit.measures = TRUE, standardized = TRUE)
+```
+
+A note for myself: the UCLA page labels this code "marker method," but `std.lv = TRUE` actually makes it the variance standardization method. The fit is the same either way.
+
+```{r}
+#| echo: false
+fm4b <- fitMeasures(twofac_cor, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "rmsea.pvalue", "srmr"))
+std4b <- standardizedSolution(twofac_cor)
+r12 <- std4b$est.std[std4b$lhs == "f1" & std4b$op == "~~" & std4b$rhs == "f2"]
+load4b <- std4b[std4b$op == "=~", c("lhs", "rhs", "est.std")]
+```
+
+Degrees of freedom: same 28 known values, but now there are 7 loadings, 7 residual variances, and 1 factor correlation, for 15 free parameters. That leaves 13 df.
+
+Results:
+
+- The two factors are correlated at `r round(r12, 2)`, so SPSS anxiety and attribution bias are clearly related, but not so closely that they are the same thing.
+- Standardized loadings on f1 range from `r round(min(abs(load4b$est.std[load4b$lhs == "f1"])), 2)` to `r round(max(abs(load4b$est.std[load4b$lhs == "f1"])), 2)` in absolute value. On f2, q06 loads at `r round(load4b$est.std[load4b$rhs == "q06"], 2)` and q07 at `r round(load4b$est.std[load4b$rhs == "q07"], 2)`.
+- Chi-square is `r round(fm4b["chisq"], 1)` on `r fm4b["df"]` df. It is still significant, but much smaller than before.
+- CFI is `r round(fm4b["cfi"], 3)`, TLI is `r round(fm4b["tli"], 3)`, and RMSEA is `r round(fm4b["rmsea"], 3)`. All of these clear the usual guidelines. The test of close fit (RMSEA p = `r round(fm4b["rmsea.pvalue"], 3)`) means we can't reject that the RMSEA is 0.05 or below.
+
+## Model Comparison
+
+```{r}
+# Collect the main fit statistics for each model in one table
+fit_row <- function(fit, name) {
+  # unclass() turns lavaan's fit vector into a plain named vector
+  fm <- round(unclass(fitMeasures(fit, c("chisq", "df", "cfi", "tli", "rmsea", "srmr"))), 3)
+  data.frame(Model = name, as.list(fm))
+}
+
+comparison <- rbind(
+  fit_row(onefac8items, "One factor, 8 items"),
+  fit_row(twofac_uncor, "Two factors, uncorrelated"),
+  fit_row(twofac_cor,   "Two factors, correlated")
+)
+
+knitr::kable(comparison, row.names = FALSE)
+```
+
+The correlated two-factor model is clearly the best of the three. It has the lowest chi-square relative to its df, the highest CFI and TLI, and the lowest RMSEA. One caveat is that the one-factor model includes item 2 and the two-factor models don't, so the comparison isn't perfectly apples to apples. Still, every fit index points the same way.
+
+# Second-Order CFA
+
+## Model Specification
+
+A second-order model asks a different question: is the correlation between f1 and f2 caused by a broader factor above both of them? Here that broader factor (f3) would be general anxiety, with SPSS anxiety and attribution bias as two more specific forms of it.
+
+In this model, f1 and f2 are now predicted by f3, so they get their own residual variances (the part of each factor that general anxiety doesn't explain).
+
+```{r}
+# Model 5a: second-order factor, marker method
+#   f3 =~ 1*f1 + 1*f2  f3 is measured by the two first-order factors,
+#                       with both loadings fixed to 1
+#   f3 ~~ f3            estimate the variance of f3
+m5a <- '
+  f1 =~ q01 + q03 + q04 + q05 + q08
+  f2 =~ q06 + q07
+  f3 =~ 1*f1 + 1*f2
+  f3 ~~ f3
+'
+
+secondorder <- cfa(m5a, data = dat8)
+summary(secondorder, fit.measures = TRUE, standardized = TRUE)
+```
+
+With only two first-order factors, there isn't enough information to estimate both second-order loadings and the f3 variance. This version fixes both loadings to 1 and estimates the variance. The UCLA page also shows a variance standardization version, which constrains the two loadings to be equal instead:
+
+```{r}
+# Model 5b: second-order factor, variance standardization method
+#   NA*f1 frees the first loading, and giving both loadings the same
+#   label (b) forces them to be equal
+#   (UCLA writes this as equal("f3=~f1")*f2, which does the same thing)
+m5b <- '
+  f1 =~ NA*q01 + q03 + q04 + q05 + q08
+  f2 =~ NA*q06 + q07
+  f3 =~ NA*f1 + b*f1 + b*f2
+  f1 ~~ 1*f1
+  f2 ~~ 1*f2
+  f3 ~~ 1*f3
+'
+
+secondorder_b <- cfa(m5b, data = dat8)
+round(fitMeasures(secondorder_b, c("chisq", "df", "cfi", "tli", "rmsea")), 3)
+```
+
+## Interpretation
+
+```{r}
+#| echo: false
+fm5 <- fitMeasures(secondorder, c("chisq", "df", "cfi", "tli", "rmsea"))
+std5 <- standardizedSolution(secondorder)
+so_load <- std5[std5$lhs == "f3" & std5$op == "=~", c("rhs", "est.std")]
+```
+
+The second-order model has the same fit as the correlated two-factor model: chi-square `r round(fm5["chisq"], 1)` on `r fm5["df"]` df, CFI `r round(fm5["cfi"], 3)`, TLI `r round(fm5["tli"], 3)`, and RMSEA `r round(fm5["rmsea"], 3)`. Both identification methods give the same chi-square and df, which is a good check that the model was identified correctly.
+
+The fit is identical because, with only two first-order factors, the second-order model is just a different way of describing the same correlation between f1 and f2. The data can't tell them apart. The standardized second-order loadings are `r round(so_load$est.std[so_load$rhs == "f1"], 2)` for f1 and `r round(so_load$est.std[so_load$rhs == "f2"], 2)` for f2, so general anxiety explains more of SPSS anxiety than of attribution bias.
+
+So choosing between the correlated two-factor model and the second-order model is a theory question, not a statistics question. If there is a good reason to believe a general anxiety factor drives both, the second-order model tells that story. If not, the correlated two-factor model is simpler and says the same thing.
+
+# Practice Questions and Answers
+
+**1. What is the difference between exploratory factor analysis and confirmatory factor analysis?**
+
+EFA lets the data decide how many factors there are and which items load on them, so it is used when the structure of a scale is unknown. CFA starts with a structure the researcher specifies in advance and tests whether the data supports it. In this note, I used CFA because the SAQ-8 already had a proposed structure.
+
+**2. What are the observed indicators and latent factors in the SAQ-8 example?**
+
+The observed indicators are the eight survey items, q01 to q08. The latent factor in the one-factor model is SPSS anxiety. In the two-factor models, the factors are SPSS anxiety (q01, q03, q04, q05, q08) and attribution bias (q06, q07), and in the second-order model, general anxiety sits above both.
+
+**3. What do factor loadings represent?**
+
+A loading shows how strongly the factor relates to an item. Standardized loadings (Std.all) can be read roughly like correlations between the item and the factor. In the eight-item model, q04 had the strongest loading (`r round(load8$est.std[load8$rhs == "q04"], 2)`) and q02 had the weakest (`r round(load8$est.std[load8$rhs == "q02"], 2)`), so q04 is a much better indicator of SPSS anxiety than q02. The sign shows direction, which is why reverse-worded q03 loads negatively.
+
+**4. What do residual variances represent?**
+
+A residual variance is the part of an item's variance the factor doesn't explain, which includes measurement error and anything unique to that item. In standardized form, it is the proportion unexplained. In the three-item model, about `r round(100 * resid1$est.std[1])`% of q03's variance was unexplained by the factor.
+
+**5. How many unique variances and covariances are available for a model with three observed indicators?**
+
+Six. Using $p(p+1)/2$ with $p = 3$ gives $3(4)/2 = 6$: three variances on the diagonal and three unique covariances. The other three covariances are duplicates because the matrix is symmetric.
+
+**6. What is the difference between a fixed parameter and a free parameter?**
+
+A free parameter is estimated from the data. A fixed parameter is set to a specific value ahead of time and not estimated. In `m1a`, the q03 loading was fixed to 1 while the q04 and q05 loadings were free. In `m1b`, it was the other way around: the factor variance was fixed to 1 and all three loadings were free.
+
+**7. Why is a model with negative degrees of freedom under-identified?**
+
+Negative df means the model is trying to estimate more parameters than there are known values in the covariance matrix. There isn't enough information to find one unique solution, kind of like trying to solve for three unknowns with only two equations. lavaan will warn that it can't compute standard errors.
+
+**8. Why does fixing one loading and setting residual covariances to zero help identify a model?**
+
+For three items, estimating every parameter in $\Sigma(\theta)$ gives 10 parameters but only 6 known values. Setting the three residual covariances to 0 removes 3 parameters, and fixing the first loading to 1 removes 1 more and gives the factor a scale. That leaves 6 free parameters and $6 - 6 = 0$ df, so the model is just-identified. This is the marker method.
+
+**9. What is the difference between a just-identified model and an over-identified model?**
+
+A just-identified model has 0 df, so it uses all the information in the data and reproduces the covariance matrix exactly. That means there is no way to test its fit, which is what happened with the three-item model. An over-identified model has positive df, so there is leftover information to test whether the model fits. The eight-item model had `r fm8["df"]` df, which is why we could calculate chi-square, CFI, TLI, and RMSEA for it.
+
+**10. How should chi-square, CFI, TLI, and RMSEA be interpreted?**
+
+Chi-square tests whether the model-implied and observed covariance matrices are the same, so a non-significant result is good. It is very sensitive to sample size, though, and with `r nrow(dat8)` respondents, even the best model here was significant. CFI and TLI compare the model to a worst-case baseline and range from 0 to 1, with 0.90 or above (0.95 to be strict) suggesting good fit. RMSEA measures misfit per degree of freedom, with 0.05 or below as close fit and 0.10 or above as poor. None of these should be read alone. For example, the correlated two-factor model had a significant chi-square but CFI `r round(fm4b["cfi"], 3)` and RMSEA `r round(fm4b["rmsea"], 3)`, and taken together, that pattern points to good fit.
+
+**11. What is the difference between correlated and uncorrelated factors?**
+
+Uncorrelated (orthogonal) factors are forced to have zero relationship with each other. Correlated (oblique) factors are allowed to relate. In this note, forcing SPSS anxiety and attribution bias to be uncorrelated gave poor fit (RMSEA `r round(fm4a["rmsea"], 3)`), while letting them correlate gave good fit and an estimated correlation of `r round(r12, 2)`. That makes sense, since both are forms of anxiety.
+
+**12. What does a second-order factor represent?**
+
+A second-order factor is a broader factor that explains why first-order factors are correlated. Instead of measuring items directly, it is measured by other factors. Here, general anxiety (f3) is treated as the reason SPSS anxiety and attribution bias move together.
+
+**13. Which model appears most theoretically and statistically appropriate based on the results?**
+
+Statistically, the correlated two-factor model and the second-order model tie, since they have identical fit, and both clearly beat the one-factor and uncorrelated models. I would lean toward the correlated two-factor model because it is simpler and makes fewer assumptions. The second-order model would only make sense if there was a strong theoretical reason to believe a general anxiety factor drives both. With only two first-order factors, the data can't really support or reject that.
+
+**14. What additional information would you want before making a final decision about the measurement model?**
+
+- The theory behind the scale, especially whether attribution bias is supposed to be a separate concept or whether a general anxiety factor is expected.
+- A check of item wording. Item 3 seems reverse-worded, and I would want to know why item 2 performed so poorly.
+- A second sample to confirm the two-factor model. That model came from looking at the one-factor results, so testing it on the same data risks fitting patterns that are specific to this sample.
+- Reliability estimates for each factor, and whether two items is really enough for attribution bias.
+- Whether the structure holds across groups, such as different types of students. The seminar mentions measurement invariance as a more advanced topic.
+
+# Summary of Important Lessons
+
+- CFA tests a structure you already believe in. It is a check, not a discovery tool.
+- Everything comes back to the covariance matrix. The model tries to reproduce it, and fit measures how close it gets.
+- Counting parameters matters. The number of known values, $p(p+1)/2$, limits how much you can estimate, and you need positive df to test fit.
+- A latent factor has no natural scale, so you always fix something: either one loading (marker method) or the factor variance (variance standardization). The fit doesn't change.
+- Three items is the minimum for a one-factor model, and it can't be tested. More items per factor is better.
+- Don't judge fit from one statistic. Chi-square is almost always significant in large samples, so look at CFI, TLI, and RMSEA together.
+- Weak or oddly behaving items (like q02 here) show up in both the correlation matrix and the loadings, so it pays to look at the data before modeling.
+- When two models fit equally well, the decision comes down to theory and simplicity.
+
+For my own work, this connects directly to survey-based customer metrics. Before combining questions into one "satisfaction" or "loyalty" score, it is worth checking that they actually measure one thing. Otherwise a dashboard could be tracking a number that mixes two different ideas.
+
+# References
+
+Kline, R. B. (2016). *Principles and practice of structural equation modeling* (4th ed.). Guilford Press.
+
+Rosseel, Y. (2012). lavaan: An R package for structural equation modeling. *Journal of Statistical Software, 48*(2), 1–36.
+
+UCLA Office of Advanced Research Computing. (n.d.). *Confirmatory factor analysis (CFA) in R with lavaan*. <https://stats.oarc.ucla.edu/r/seminars/rcfa/>
+
+UCLA Office of Advanced Research Computing. (2021, May 17). *Confirmatory factor analysis in R with lavaan* [Video]. YouTube. <https://www.youtube.com/watch?v=2M6VQY_OFvM>
+
+# Appendix
+
+## Project Links
+
+- [GitHub Repository](https://github.com/Buenoalexa11/IBM6500)
+- [Quarto Source File on GitHub](https://github.com/Buenoalexa11/IBM6500/blob/main/M11-Study-Note-CFA-Model-building.qmd)
+- [GitHub Pages Website](https://buenoalexa11.github.io/IBM6500/M11-Study-Note-CFA-Model-building.html)
