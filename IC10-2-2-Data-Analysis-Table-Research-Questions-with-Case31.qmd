@@ -1,0 +1,154 @@
+---
+title: "IC10-2-2 - Data Analysis Table - Research Questions with Case31"
+author: "Alexa Bueno"
+format: html
+---
+
+## Case 31: Employees Federal Credit Union
+
+### Research Questions and Hypotheses
+
+- **R1:** Why do people join the Credit Union?
+- **R2:** Why do members use other financial institutions when they need to borrow funds?
+- **R3:** What are the members' attitudes and beliefs about the proficiencies of credit union employees?
+- **R4:** Are there any perceived differences on (a) attitude towards employee proficiencies, (b) awareness of services, and (c) operational effectiveness between members who live in the area of the firm's headquarters and members who live elsewhere?
+- **R5:** How well are the members aware of the services offered by the credit union?
+- **R6:** What are the members' attitudes and beliefs about how effectively the credit union is operated?
+- **H1:** Members' awareness of the regular share accounts will influence their opinions on how well the current financial services provided by the credit union meet their needs.
+- **H2:** Members will not be different in their opinion on CU's loan rate (Q8r) and the degree to which they agree that CU's loan rate is lower than competitors (Q30).
+
+## Data Analysis Table for Case 31: Federal Credit Union
+
+```{=html}
+<style>
+.dat { border-collapse: collapse; width: 100%; font-size: 0.9em; }
+.dat th, .dat td { border: 1px solid #999; padding: 6px 8px; vertical-align: top; }
+.dat th { background: #eee; }
+</style>
+<table class="dat">
+<thead>
+<tr>
+<th>Hypothesis / RQ</th>
+<th>Constructs &amp; Their Role</th>
+<th>Operationalization of the Constructs</th>
+<th>Scale</th>
+<th>Statistical Test</th>
+</tr>
+</thead>
+<tbody>
+
+<tr>
+<td>R1</td>
+<td>Reasons to join the Credit Union (descriptive)</td>
+<td>Q7</td>
+<td>Interval</td>
+<td>Descriptive statistics, followed by one group t-test</td>
+</tr>
+
+<tr>
+<td>R2</td>
+<td>Experience borrowing from other financial institutions (screening)<br><br>
+Reasons to use loans from other financial institutions (descriptive)</td>
+<td>Q28<br><br>
+Q8r, Q30<br>(Q29 has no data)</td>
+<td>Nominal (1=yes, 2=no)<br><br>
+Interval</td>
+<td>Descriptive statistics (frequencies for Q28), followed by one group t-test for Q8r and Q30</td>
+</tr>
+
+<tr>
+<td>R3</td>
+<td>Attitudes towards employee proficiencies (descriptive)</td>
+<td>Q3 – Q6</td>
+<td>Interval</td>
+<td>DS and reliability / factor analysis, followed by one group t-test</td>
+</tr>
+
+<tr>
+<td>R4a</td>
+<td>Member residence (I.V.)<br><br>
+Attitudes towards employee proficiencies (D.V.)</td>
+<td>Q38<br><br>Att_Employee</td>
+<td>Nominal (1=yes, 2=no)<br><br>Interval</td>
+<td>Descriptive statistics, followed by independent groups t-test</td>
+</tr>
+
+<tr>
+<td>R4b</td>
+<td>Member residence (I.V.)<br><br>
+Awareness of services (D.V.)</td>
+<td>Q38<br><br>Q13r – Q26r</td>
+<td>Nominal (1=yes, 2=no)<br><br>Ordinal</td>
+<td>Two-way cross-tabulation, followed by chi-square test</td>
+</tr>
+
+<tr>
+<td>R4c</td>
+<td>Member residence (I.V.)<br><br>
+Attitude toward operational effectiveness (D.V.)</td>
+<td>Q38<br><br>
+Q9r – Q10r<br>
+Q11 – Q12rc<br>
+Q31 – Q34<br>
+Q37r</td>
+<td>Nominal (1=yes, 2=no)<br><br>
+Interval<br>
+Nominal<br>
+Interval<br>
+Interval</td>
+<td>Descriptive statistics, followed by the following respectively:<br>
+Q9r – Q10r: independent groups t-test<br>
+Q11 – Q12rc: chi-square test of independence<br>
+Q31 – Q34: independent groups t-test<br>
+Q37r: independent groups t-test</td>
+</tr>
+
+<tr>
+<td>R5</td>
+<td>Awareness of services (descriptive)</td>
+<td>Q13r – Q26r</td>
+<td>Ordinal</td>
+<td>Descriptive statistics (frequency distribution and percentages for each service)</td>
+</tr>
+
+<tr>
+<td>R6</td>
+<td>Attitude toward operational effectiveness (descriptive)</td>
+<td>Q9r – Q10r<br>
+Q11 – Q12rc<br>
+Q31 – Q34<br>
+Q37r</td>
+<td>Interval<br>
+Nominal<br>
+Interval<br>
+Interval</td>
+<td>DS (frequencies for Q11 – Q12rc; means for the interval items), reliability / factor analysis for Q31 – Q34, followed by one group t-test for the interval items</td>
+</tr>
+
+<tr>
+<td>H1</td>
+<td>Members' awareness of the regular share account (I.V.)<br><br>
+The degree to which the current financial services meet the needs of the members (D.V.)</td>
+<td>Q13r<br><br>Q33</td>
+<td>Ordinal<br><br>Interval</td>
+<td>One-way ANOVA</td>
+</tr>
+
+<tr>
+<td>H2</td>
+<td>Member opinion on CU's rate charge (D.V.)<br><br>
+Member agreement that CU's loan rates are lower than competitors (D.V.)</td>
+<td>Q8r<br><br>Q30</td>
+<td>Interval<br><br>Interval</td>
+<td>Paired samples t-test</td>
+</tr>
+
+</tbody>
+</table>
+```
+
+## Appendix
+
+- GitHub Repo: <https://github.com/Buenoalexa11/IBM6500>
+- QMD file: <https://github.com/Buenoalexa11/IBM6500/blob/main/IC10-2-2-Data-Analysis-Table-Research-Questions-with-Case31.qmd>
+- GitHub Pages: <https://buenoalexa11.github.io/IBM6500/IC10-2-2-Data-Analysis-Table-Research-Questions-with-Case31.html>
