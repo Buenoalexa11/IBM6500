@@ -1,0 +1,315 @@
+---
+title: "IC11-2-Case-31-Summary-of-Data-Analysis-R1-R2-R5-R6"
+subtitle: "Case 31 Employees Federal Credit Union"
+author: "Alexa Bueno"
+date: today
+format:
+  revealjs:
+    theme: simple
+    slide-number: true
+    transition: slide
+    code-line-numbers: true
+    code-fold: true
+    smaller: true
+    scrollable: true
+    embed-resources: true
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(haven)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(knitr)
+library(psych)
+
+theme_set(theme_minimal(base_size = 16))
+
+# Cleaned Case 31 file from Canvas (efcu_4). It already has the reversed variables.
+data <- read_sav("Case 31 Data_efcu_4.sav")
+
+# q12 has a code 3 with no value label, so I treat it as missing (same as Module 10)
+data <- data |>
+  mutate(q12 = na_if(as.numeric(q12), 3))
+
+# Helper: one group t-test against a test value, returned as one table row
+one_t <- function(x, mu, item) {
+  x <- as.numeric(x)
+  x <- x[!is.na(x)]
+  res <- t.test(x, mu = mu)
+  tibble(
+    Item = item,
+    n = length(x),
+    Mean = round(mean(x), 2),
+    SD = round(sd(x), 2),
+    `Test value` = mu,
+    t = round(unname(res$statistic), 2),
+    df = unname(res$parameter),
+    p = format.pval(res$p.value, digits = 3, eps = 0.001)
+  )
+}
+
+# Helper: percentage table for one item
+pct_table <- function(x) {
+  as_factor(x) |>
+    table(useNA = "no") |>
+    prop.table() |>
+    (\(p) round(p * 100, 1))() |>
+    as.data.frame() |>
+    setNames(c("Response", "Percent"))
+}
+```
+
+# Overview
+
+## Data and Approach
+
+- Data: Case 31 Employees Federal Credit Union survey, cleaned file `Case 31 Data_efcu_4.sav` (128 members)
+- I followed the Case 31 data analysis table for R1, R2, R5, and R6
+- Interval items: descriptive statistics, then a one group t-test against the scale midpoint
+  - 5-point items are tested against 3 ("Average" or "Uncertain")
+  - Q10r is a 4-point item, so its midpoint is 2.5
+- Nominal and awareness items: frequencies and percentages
+- Reversed items (Q7r, Q8r, Q9r, Q10r, Q37r, Q13r to Q26r) are coded so higher numbers mean higher rates, more accuracy, a better rating, or more familiarity
+
+::: notes
+All tests use alpha = .05. "No Opinion" answers were already set to missing in the cleaned file.
+:::
+
+# R1: Why do people join the Credit Union?
+
+## R1: Opinion of Savings Rates (Q7r)
+
+```{r}
+#| label: r1-freq
+pct_table(data$Q7_r) |> kable(caption = "Q7r: Rates paid on share (savings) accounts, % of members who answered")
+```
+
+```{r}
+#| label: r1-ttest
+one_t(data$Q7_r, 3, "Q7r Savings rates (1 = Very Low, 5 = Very High)") |> kable()
+```
+
+## R1: What It Means
+
+::: incremental
+- Most members (70.3%) rate the savings rates as "Average," and only 18.6% say they are "High"
+- The mean (3.07) is not significantly different from "Average" (t(117) = 1.30, p = .196)
+- Members don't see the savings rates as better than average, so rates are probably not the main reason people join
+- The reason to join is more likely convenience or the workplace connection. The survey only has one item for R1, so I can't test those other reasons directly
+:::
+
+# R2: Why do members borrow elsewhere?
+
+## R2: Who Has a Loan With the CU? (Q27)
+
+```{r}
+#| label: r2-q27
+pct_table(data$q27) |> kable(caption = "Q27: Currently have a loan with the Credit Union?")
+```
+
+::: callout-note
+The data analysis table lists Q28 (borrowed from another institution) as the screening item and notes Q29 has no data. Neither Q28 nor Q29 is in the efcu_4 file, so I used Q27 to show how many members currently borrow from the CU.
+:::
+
+## R2: Loan Rate Opinions (Q8r and Q30)
+
+```{r}
+#| label: r2-ttest
+bind_rows(
+  one_t(data$Q8_r, 3, "Q8r Rates charged on loans (1 = Very Low, 5 = Very High)"),
+  one_t(data$q30, 3, "Q30 CU loan rates are lower than others (1 = SD, 5 = SA)")
+) |> kable()
+```
+
+```{r}
+#| label: r2-plot
+#| fig-height: 3.5
+#| fig-width: 10
+data |>
+  select(Q8_r, q30) |>
+  pivot_longer(everything(), names_to = "item", values_to = "value") |>
+  filter(!is.na(value)) |>
+  mutate(item = recode(item,
+                       Q8_r = "Q8r: Loan rates (1 = Very Low, 5 = Very High)",
+                       q30 = "Q30: CU rates lower than others (1 = SD, 5 = SA)")) |>
+  ggplot(aes(x = factor(value))) +
+  geom_bar(fill = "#2f6f8f") +
+  facet_wrap(~ item) +
+  labs(x = "Response", y = "Members")
+```
+
+## R2: What It Means
+
+::: incremental
+- Less than half of members (45.3%) currently have a loan with the CU
+- Members rate the CU's loan rates as about average (M = 3.14). The difference from "Average" is close but not significant (t(106) = 1.91, p = .058)
+- 28.0% see the loan rates as "High" or "Very High," while only 16.8% see them as low
+- Members are unsure whether CU loan rates beat competitors (M = 3.06, t(127) = 0.82, p = .416), and 46.1% answered "Uncertain"
+- So members have no clear rate reason to borrow from the CU. Some see the rates as high, and many don't know how they compare, which could push them to borrow elsewhere
+- Q8 has 21 missing answers, which is expected since many members haven't borrowed
+:::
+
+# R5: How aware are members of CU services?
+
+## R5: Awareness of Services (Q13r to Q26r)
+
+```{r}
+#| label: r5-table
+aware_items <- paste0("q", 13:26, "_r")
+
+aware_long <- data |>
+  select(all_of(aware_items)) |>
+  pivot_longer(everything(), names_to = "item", values_to = "value") |>
+  filter(!is.na(value)) |>
+  mutate(
+    service = sub("^Q[0-9]+r-", "",
+                  sapply(item, \(v) attr(data[[v]], "label"))),
+    status = factor(value, levels = c(3, 2, 1),
+                    labels = c("Aware and Have Used",
+                               "Aware but Have Not Used",
+                               "Unaware"))
+  )
+
+aware_summary <- aware_long |>
+  count(service, status) |>
+  group_by(service) |>
+  mutate(pct = round(n / sum(n) * 100, 1)) |>
+  ungroup()
+
+aware_summary |>
+  select(-n) |>
+  pivot_wider(names_from = status, values_from = pct, values_fill = 0) |>
+  left_join(aware_long |> group_by(service) |>
+              summarise(`Mean (1-3)` = round(mean(value), 2)),
+            by = "service") |>
+  arrange(desc(`Mean (1-3)`)) |>
+  rename(Service = service) |>
+  kable(caption = "Percent of members by awareness status (higher mean = more familiar)")
+```
+
+## R5: Awareness Chart
+
+```{r}
+#| label: r5-plot
+#| fig-height: 6
+#| fig-width: 11
+order <- aware_long |>
+  group_by(service) |>
+  summarise(m = mean(value)) |>
+  arrange(m) |>
+  pull(service)
+
+aware_summary |>
+  mutate(service = factor(service, levels = order)) |>
+  ggplot(aes(x = pct, y = service, fill = status)) +
+  geom_col() +
+  scale_fill_manual(values = c("#2f6f8f", "#9cc3d5", "#d9d9d9")) +
+  labs(x = "Percent of members", y = NULL, fill = NULL) +
+  theme(legend.position = "top")
+```
+
+## R5: What It Means
+
+::: incremental
+- Most members know the main loan products exist, but few have used them. New car loans (77.3%), signature loans (81.2%), and late model car loans (79.7%) are mostly "aware but have not used"
+- The MasterCard (43.8% used) and line of credit loans (37.5% used) are the most used services
+- Awareness is weakest for IRA loans (60.9% unaware), share collateralized loans (53.9%), and recreational loans (43.0%)
+- The gap is less about awareness and more about turning awareness into use. Promoting loan products, especially to the 54.7% of members without a CU loan, looks like the biggest opportunity
+:::
+
+::: callout-warning
+The regular share account shows 64.8% "Unaware," which doesn't make sense since members need a share account to join. This could be a coding or labeling issue in the original data, so I would treat Q13 with caution.
+:::
+
+# R6: How effectively is the CU operated?
+
+## R6: Statements and Confidentiality (Q11 and Q12)
+
+:::: columns
+::: {.column width="50%"}
+```{r}
+#| label: r6-q11
+pct_table(data$q11) |> kable(caption = "Q11: Statements easy to understand?")
+```
+:::
+
+::: {.column width="50%"}
+```{r}
+#| label: r6-q12
+pct_table(data$q12) |> kable(caption = "Q12: Accounts kept confidential? (n = 106)")
+```
+:::
+::::
+
+## R6: Operations Ratings and t-tests
+
+```{r}
+#| label: r6-ttest
+bind_rows(
+  one_t(data$q9_r, 3, "Q9r Statement frequency (3 = About Right)"),
+  one_t(data$q10_r, 2.5, "Q10r Statement accuracy (1 = Poor, 4 = Excellent)"),
+  one_t(data$q31, 3, "Q31 Personnel keep info confidential"),
+  one_t(data$q32, 3, "Q32 Prompt in processing loan applications"),
+  one_t(data$q33, 3, "Q33 Services meet members' needs"),
+  one_t(data$q34, 3, "Q34 Loan applications simple and easy"),
+  one_t(data$Q37_r, 3, "Q37r Overall rating of management and operation")
+) |> kable()
+```
+
+## R6: Reliability Check for Q31 to Q34
+
+```{r}
+#| label: r6-alpha
+ops <- data |> select(q31:q34) |> zap_labels()
+ops_alpha <- psych::alpha(ops)
+round(ops_alpha$total$raw_alpha, 2)
+cor(ops, use = "pairwise.complete.obs") |> round(2) |> kable(caption = "Inter-item correlations")
+```
+
+- Cronbach's alpha is 0.47, well below 0.70, and most correlations are weak
+- The four items cover different parts of the CU (privacy, loan speed, service fit, application ease), so I report them as separate items instead of one index
+
+## R6: What It Means
+
+::: incremental
+- Members rate the CU's operations favorably. The overall rating (Q37r) averages 4.07, close to "Good," and 84.3% rate it "Good" or "Excellent" (t(120) = 16.12, p < .001)
+- Statements are a strength: 97.7% find them easy to understand and accuracy averages 3.47 out of 4 (p < .001)
+- Statement frequency is the one weak spot. 22.7% say statements don't come often enough, so the mean (2.77) is significantly below "About Right" (t(127) = -6.10, p < .001)
+- All four Q31 to Q34 items are significantly above "Uncertain" (all p < .001). Confidentiality is highest (M = 3.95, 78.1% agree) and easy loan applications is lowest (M = 3.46, 57.8% agree)
+- On Q12, 30.2% of members who answered said "No" to accounts being kept confidential, which is worth looking into even though Q31 is positive
+:::
+
+# Summary
+
+## Key Takeaways
+
+| RQ | Finding |
+|----|---------|
+| R1 | Savings rates are seen as average, so rates are probably not the main reason people join |
+| R2 | Members see loan rates as average to high and are unsure if they beat competitors, giving no clear rate reason to borrow from the CU |
+| R5 | Members know most loan products exist but few use them, and awareness is weakest for IRA, share collateralized, and recreational loans |
+| R6 | Operations are rated well overall, but statement frequency and loan application ease have the most room to improve |
+
+## Recommendations
+
+::: incremental
+- Promote loan products to current members, with clear rate comparisons against local banks
+- Send statements more often, or offer an online option to check balances anytime
+- Simplify the loan application, since it scored lowest of the operations items
+- Clarify how account information is kept private, since some members answered "No" on Q12
+:::
+
+# Appendix
+
+## Links
+
+- GitHub Repo: <https://github.com/Buenoalexa11/IBM6500>
+- QMD file: <https://github.com/Buenoalexa11/IBM6500/blob/main/IC11-2-Case-31-Summary-of-Data-Analysis-R1-R2-R5-R6.qmd>
+- GitHub Pages: <https://buenoalexa11.github.io/IBM6500/IC11-2-Case-31-Summary-of-Data-Analysis-R1-R2-R5-R6.html>
