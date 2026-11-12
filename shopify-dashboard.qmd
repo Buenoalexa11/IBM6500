@@ -1,0 +1,178 @@
+---
+title: "Do Discounts Pay Off? Shopify Sales 2023–2025"
+author: "Alexa Bueno"
+format:
+  dashboard:
+    theme: cosmo
+    orientation: rows
+    nav-buttons:
+      - icon: github
+        href: https://github.com/Buenoalexa11/IBM6540-Reports
+    embed-resources: true
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+#| label: setup
+library(tidyverse)
+library(scales)
+
+sales <- read_csv("shopify_sales_dataset_ml_eda.csv", show_col_types = FALSE) |>
+  mutate(
+    order_date = as.Date(order_date),
+    month      = floor_date(order_date, "month"),
+    list_value = product_price * quantity,
+    discount_band = factor(paste0(discount_percent, "%"),
+                           levels = paste0(sort(unique(discount_percent)), "%"))
+  )
+
+by_discount <- sales |>
+  group_by(discount_band) |>
+  summarise(
+    orders       = n(),
+    avg_quantity = mean(quantity),
+    avg_order    = mean(revenue),
+    return_rate  = mean(is_returned),
+    .groups = "drop"
+  )
+
+full_price_aov <- by_discount$avg_order[by_discount$discount_band == "0%"]
+deep_disc_aov  <- by_discount$avg_order[by_discount$discount_band == "40%"]
+discount_given <- sum(sales$list_value - sales$revenue)
+
+theme_set(theme_minimal(base_size = 13))
+```
+
+# Overview
+
+## Row {height=22%}
+
+```{r}
+#| content: valuebox
+#| title: "Total revenue"
+list(icon = "currency-dollar", color = "primary",
+     value = paste0("$", round(sum(sales$revenue) / 1e6, 1), "M"))
+```
+
+```{r}
+#| content: valuebox
+#| title: "Orders"
+list(icon = "cart", color = "info", value = comma(nrow(sales)))
+```
+
+```{r}
+#| content: valuebox
+#| title: "Average order value"
+list(icon = "receipt", color = "success", value = dollar(mean(sales$revenue), accuracy = 1))
+```
+
+```{r}
+#| content: valuebox
+#| title: "Given away in discounts"
+list(icon = "tag", color = "warning",
+     value = paste0("$", round(discount_given / 1e6, 1), "M"))
+```
+
+## Row {height=78%}
+
+### Column {width=65%}
+
+```{r}
+#| title: "Monthly revenue (June 2025 is a partial month)"
+sales |>
+  count(month, wt = revenue, name = "revenue") |>
+  ggplot(aes(month, revenue)) +
+  geom_line(color = "#2780e3", linewidth = 1) +
+  geom_point(color = "#2780e3", size = 1.5) +
+  scale_y_continuous(labels = label_dollar(scale = 1e-6, suffix = "M")) +
+  labs(x = NULL, y = "Revenue")
+```
+
+### Column {width=35%}
+
+::: {.card title="What is this dashboard about?"}
+This dashboard uses **60,000 Shopify orders** placed between **January 2023 and June 2025** across 7 product categories, 7 countries, and 5 traffic sources.
+
+**The question:** almost 9 out of 10 orders used a discount. *Do those discounts actually get customers to buy more?*
+
+**The short answer:** no. Customers buy about **3 items per order whether the discount is 0% or 40%**, so deeper discounts simply shrink the order value. See the **Discounts** tab for the details.
+:::
+
+# Discounts
+
+## Row {height=50%}
+
+```{r}
+#| title: "Items per order barely moves with the discount"
+ggplot(by_discount, aes(discount_band, avg_quantity)) +
+  geom_col(fill = "#3fb618") +
+  geom_text(aes(label = number(avg_quantity, accuracy = 0.01)), vjust = -0.4) +
+  scale_y_continuous(limits = c(0, 3.5)) +
+  labs(x = "Discount", y = "Average items per order")
+```
+
+```{r}
+#| title: "But the average order value falls with every discount step"
+ggplot(by_discount, aes(discount_band, avg_order)) +
+  geom_col(fill = "#ff7518") +
+  geom_text(aes(label = dollar(avg_order, accuracy = 1)), vjust = -0.4) +
+  scale_y_continuous(labels = label_dollar(), limits = c(0, 1350)) +
+  labs(x = "Discount", y = "Average revenue per order")
+```
+
+## Row {height=50%}
+
+```{r}
+#| title: "Return rate by discount level"
+ggplot(by_discount, aes(discount_band, return_rate)) +
+  geom_col(fill = "#9954bb") +
+  geom_text(aes(label = percent(return_rate, accuracy = 0.1)), vjust = -0.4) +
+  scale_y_continuous(labels = label_percent(), limits = c(0, 0.18)) +
+  labs(x = "Discount", y = "Share of orders returned")
+```
+
+::: {.card title="How to read this page"}
+- **Top left:** a 40% discount does **not** lead to bigger baskets. Customers buy about **3 items** at every discount level.
+- **Top right:** because quantity stays flat, each discount step lowers the order value. Orders fall from **`r dollar(full_price_aov, accuracy = 1)`** at full price to **`r dollar(deep_disc_aov, accuracy = 1)`** at 40% off, a drop of **`r percent(1 - deep_disc_aov / full_price_aov, accuracy = 1)`**.
+- **Bottom left:** deeper discounts also come with slightly *more* returns.
+
+**Takeaway:** in this store, discounts reduce revenue without increasing how much people buy. Testing smaller or more targeted discounts could protect margin.
+:::
+
+# Channels & Categories
+
+## Row
+
+```{r}
+#| title: "Revenue by traffic source"
+sales |>
+  count(traffic_source, wt = revenue, name = "revenue") |>
+  ggplot(aes(revenue, fct_reorder(traffic_source, revenue))) +
+  geom_col(fill = "#2780e3") +
+  geom_text(aes(label = dollar(revenue, scale = 1e-6, suffix = "M", accuracy = 0.1)),
+            hjust = 1.1, color = "white") +
+  scale_x_continuous(labels = label_dollar(scale = 1e-6, suffix = "M")) +
+  labs(x = "Revenue", y = NULL)
+```
+
+```{r}
+#| title: "Revenue and return rate by product category"
+sales |>
+  group_by(product_category) |>
+  summarise(revenue = sum(revenue), return_rate = mean(is_returned)) |>
+  ggplot(aes(revenue, fct_reorder(product_category, revenue))) +
+  geom_col(fill = "#3fb618") +
+  geom_text(aes(label = paste0(percent(return_rate, accuracy = 0.1), " returned")),
+            hjust = 1.1, color = "white") +
+  scale_x_continuous(labels = label_dollar(scale = 1e-6, suffix = "M")) +
+  labs(x = "Revenue", y = NULL)
+```
+
+## Row {height=25%}
+
+::: {.card title="What this page shows"}
+Revenue is spread **almost evenly** across all five traffic sources (about 20% each) and all seven product categories, and the return rate stays near **15%** everywhere. No single channel or category is carrying the business. That makes the **discount policy** the clearest lever for improving revenue.
+:::
