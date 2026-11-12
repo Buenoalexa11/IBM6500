@@ -1,0 +1,552 @@
+---
+title: "M06-gtsummary-Reflection-Assignment"
+subtitle: "Summary Tables with gtsummary | Revealjs Presentation"
+author: "Alexa Bueno"
+institute: "IBM 6500, Cal Poly Pomona"
+date: "`r Sys.Date()`"
+format:
+  revealjs:
+    theme: [serif, custom.scss]
+    width: 1600
+    height: 900
+    footer: "M06 gtsummary Reflection | Wellness Ranch Therapy CEP"
+    logo: logo.svg
+    transition: slide
+    transition-speed: default
+    background-transition: fade
+    incremental: false
+    toc: true
+    toc-depth: 1
+    toc-title: "Agenda"
+    slide-number: true
+    scrollable: true
+    smaller: true
+    code-fold: false
+    code-overflow: wrap
+    number-sections: false
+    number-depth: 5
+    embed-resources: true
+    css: styles.css
+    title-slide-attributes:
+      data-background-color: "#F6F1E3"
+bibliography: references.bib
+editor: visual
+execute:
+  echo: true
+  freeze: auto
+  warning: false
+  message: false
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+# Packages used in this deck.
+# If one is missing, run this once in the Console:
+# install.packages(c("tidyverse", "gt", "gtsummary", "cardx", "broom.helpers"))
+library(dplyr)      # data wrangling
+library(tidyr)      # pivot_longer() and uncount()
+library(forcats)    # working with factors
+library(ggplot2)    # one supporting chart
+library(gt)         # table styling after as_gt()
+library(gtsummary)  # summary tables
+
+# Small helper so every table is readable on a slide
+slide_table <- function(x, size = 26) {
+  x |> tab_options(table.font.size = px(size), data_row.padding = px(5))
+}
+```
+
+# Introduction
+
+## What This Reflection Covers {transition="zoom"}
+
+This deck reflects on the module on publishable summary tables with `{gtsummary}`. Each section starts with the prompt from the assignment, and my response follows it.
+
+::: incremental
+-   **Part 1.** What `{gtsummary}` can do, based on Dr. Jung's lecture, and how it could help me
+-   **Part 2.** What I took from Daniel Sjoberg's presentation, including how the package differs from `{gt}` and `{gtExtras}`
+-   **Part 3.** A cross-tabulation with my MSDM CEP data
+-   **Part 4.** A multiple regression with my MSDM CEP data
+:::
+
+::: aside
+Module materials: Dr. Jung's lecture note [@jung2026gtsummary] and Daniel Sjoberg's presentation [@sjoberg2021talk]. The package itself is described in @sjoberg2021gtsummary.
+:::
+
+::: notes
+Quick intro. Parts 1 and 2 are the essay. Parts 3 and 4 use real GA4 data from our CEP client, Wellness Ranch.
+:::
+
+# Part 1: What gtsummary Can Do {background-color="#1E4D2B"}
+
+## Prompt 1: Capabilities of the Package {.smaller}
+
+::: prompt-box
+**Prompt 1:** In Step 1, you have seen how to create a summary table and modify it for various statistical analyses. Summarize the package's capabilities as explained by the speaker. How may the {gtsummary} benefit you for your school work or career?
+:::
+
+The short version is that `{gtsummary}` calculates the statistics and builds the table in the same step. In the lecture, Dr. Jung grouped what it can do into a few areas [@jung2026gtsummary]:
+
+::: incremental
+1.  **Descriptive tables** with `tbl_summary()`. It looks at each variable's type and picks a default: median (Q1, Q3) for continuous variables and n (%) for categorical ones.
+2.  **Group comparisons** by adding `by =` and then `add_p()`. The package chooses the test for me and names it in a footnote.
+3.  **Cross-tabulations** with `tbl_cross()`, including a chi-square test.
+4.  **Regression tables** with `tbl_regression()` and `tbl_uvregression()`.
+5.  **Combining and styling** tables with `tbl_merge()`, `tbl_stack()`, and journal themes.
+:::
+
+::: notes
+The lecture used the trial data that ships with the package (200 patients, Drug A vs Drug B), the gss_cat survey data, and mpg for the OLS example.
+:::
+
+## The Functions That Stood Out {.smaller}
+
+::::: columns
+::: {.column width="50%"}
+### Building the table
+
+-   `tbl_summary(by = trt)` splits the table by group
+-   `add_p()` adds p-values, `add_overall()` adds a total column, and `add_n()` adds the sample size
+-   `add_difference()` shows the difference between two groups with a confidence interval
+-   `add_q()` adjusts p-values for multiple comparisons
+-   `statistic =`, `label =`, `digits =`, and `type =` change what is reported and how
+:::
+
+::: {.column width="50%"}
+### Finishing the table
+
+-   `modify_header()`, `modify_spanning_header()`, `modify_footnote()`, and `modify_caption()` control the text around the numbers
+-   `bold_labels()` and `bold_p()` handle emphasis
+-   `as_gt()` converts the table into a `{gt}` object, so I can keep using `tab_header()` and the other `{gt}` functions from the earlier module
+-   `theme_gtsummary_journal()` restyles a table for a journal like JAMA
+:::
+:::::
+
+. . .
+
+::: takeaway
+**One thing I did not expect:** changing the displayed statistic to mean (SD) does not change the test. `add_p()` still ran a Wilcoxon rank sum test in the lecture example. To get a t-test, Dr. Jung used `add_difference()`, which runs a Welch two sample t-test.^[He marked this part of the code with a "be careful" comment. It would be easy to report a mean in the table and a p-value from a test that compares something else.]
+:::
+
+## How gtsummary Could Help Me {transition="convex"}
+
+::::: columns
+::: {.column width="50%"}
+### School work
+
+::: incremental
+-   Our CEP needs tables that a nonprofit client can read. `{gtsummary}` gives me a clean table with labels and footnotes without formatting anything by hand.
+-   The table is created by code, so if we pull a new date range from GA4, I re-render and the numbers update.
+-   It saves me from copying output from `summary()` into a document, which is where I usually make mistakes.
+:::
+:::
+
+::: {.column width="50%"}
+### Career
+
+::: incremental
+-   I work in ecommerce, and a lot of reporting is comparing groups: one channel against another, or one period against another.
+-   A table that shows the counts, the percentages, and the test in one place is easier to hand to a manager than a spreadsheet tab.
+-   I am still learning which test fits which situation. Having the test named in the footnote makes me check that it matches what I am trying to say.
+:::
+:::
+:::::
+
+::: notes
+Keep this honest. I have not used gtsummary at work yet. These are the places where I can see it fitting.
+:::
+
+# Part 2: The Sjoberg Presentation {background-color="#1E4D2B"}
+
+## Prompt 2.1: gtsummary vs. gt and gtExtras {.smaller}
+
+::: prompt-box
+**Prompt 2:** In Step 2, you watched the extended presentation of the {gtsummary} package by Dr. Daniel Sjoberg, the very creator of the package.
+
+**2.1.** How does it differ from gt and gtExtras?
+:::
+
+The way I understand it, the three packages do different jobs:
+
+| Package | What it does | What I have to bring |
+|-------------------|---------------------------|---------------------------|
+| `{gt}` | Displays and formats a table (titles, spanners, footnotes, number formats) | A data frame I already summarized with `{dplyr}` |
+| `{gtExtras}` | Adds themes and small in-cell charts like sparklines on top of `{gt}` | A `{gt}` table |
+| `{gtsummary}` | Calculates the summary statistics, tests, or model results **and** builds the table | Raw data or a fitted model |
+
+: Three table packages compared {.striped}
+
+. . .
+
+In the earlier module, I had to `group_by()` and `summarise()` before `gt()` could show anything. With `{gtsummary}`, one function does the summarizing and the table. Sjoberg also described `{gt}` as one of several **print engines**, so a `{gtsummary}` table can be converted with `as_gt()` and then styled with `{gt}` functions [@sjoberg2021talk].
+
+## Prompt 2.2: Three Things I Learned Newly {.smaller}
+
+::: prompt-box
+**2.2.** Give three things you learned newly that were not explained in the lecture in Step 1.
+:::
+
+::: panel-tabset
+### 1. inline_text()
+
+Any number in a `{gtsummary}` table can be pulled into a sentence with `inline_text()`. The sentence then updates with the table, so the text and the table cannot disagree.
+
+``` r
+# In the report text:
+# The odds ratio for age is `r knitr::inline_expr("inline_text(tbl_uvreg, variable = age)")`
+```
+
+I used this in Parts 3 and 4 of this deck. The p-values and odds ratios in my interpretation are pulled from the tables, not typed.
+
+### 2. More table types
+
+The lecture covered summary, cross-tab, and regression tables. Sjoberg showed a few more:
+
+-   `tbl_svysummary()` for weighted survey data
+-   `tbl_survfit()` for survival outcomes
+-   `tbl_strata()` to repeat a table within each level of another variable
+
+`tbl_svysummary()` is the one I could see using, since survey research is the focus of this class.
+
+### 3. Custom themes and print engines
+
+The lecture showed journal themes. Sjoberg went further:
+
+-   `theme_gtsummary_compact()` shrinks font size and padding, which helps when a table is long.
+-   `theme_gtsummary_language()` translates the table text.
+-   `set_gtsummary_theme()` lets a team write its own theme, so every table gets the same title, source note, and rounding rules.
+-   The same table can be printed through different engines, depending on whether the output is HTML, Word, or PDF.
+:::
+
+::: aside
+He also opened with the reproducibility problem in research. That explained why the package exists: fewer hand-typed numbers means fewer errors.
+:::
+
+# Part 3: Cross-Tabulation with CEP Data {background-color="#1E4D2B"}
+
+## The Data: GA4 Sessions for Wellness Ranch {.smaller}
+
+::: prompt-box
+**Prompt 3:** Apply what you learned to your MSDM CEP data. Choose two appropriate variables for cross-tabulation and show if the two variables are associated or not. Use appropriate statistics to test if the two variables are associated. Code, produce the table, and interpret the result.
+:::
+
+::::: columns
+::: {.column width="55%"}
+My CEP client is Wellness Ranch Therapy [@zhang2026cep]. The data comes from the client's GA4 property [@ga4_wellnessranch]:
+
+-   **Report:** Traffic acquisition, with device category added as a second dimension
+-   **Dates:** October 8 to October 31, 2026, which starts on the first day GA4 recorded sessions
+-   **Metrics:** sessions and engaged sessions
+:::
+
+::: {.column width="45%"}
+::: {.fragment .fade-left}
+GA4 gives totals for each group. It does not give one row per visit. So I entered the totals and then expanded them into one row per session, which is the shape `{gtsummary}` expects.^[GA4's header total for this range is 1,443 sessions and 977 engaged sessions. The rows add up to 1,442 and 978. GA4 estimates some counts, so the rows and the total can differ by a session. I used the row values.]
+:::
+:::
+:::::
+
+::: notes
+An engaged session in GA4 is one that lasted longer than 10 seconds, had a key event, or had at least 2 page views.
+:::
+
+## Step 1: Enter the GA4 Totals
+
+```{r}
+#| label: ga4-data
+#| code-line-numbers: "|2|3-15"
+# Totals copied from the GA4 Traffic acquisition report (Oct 8 to Oct 31, 2026)
+ga4 <- tribble(
+  ~channel,         ~device,   ~sessions, ~engaged_sessions,
+  "Organic Social", "mobile",        593,               446,
+  "Organic Search", "mobile",        290,               192,
+  "Direct",         "mobile",        211,               124,
+  "Organic Search", "desktop",       158,               119,
+  "Direct",         "desktop",       125,                64,
+  "Referral",       "desktop",        23,                11,
+  "Referral",       "mobile",         16,                 9,
+  "Organic Search", "tablet",         11,                 7,
+  "Organic Social", "desktop",         5,                 3,
+  "Organic Social", "tablet",          5,                 2,
+  "AI Assistant",   "mobile",          2,                 1,
+  "Paid Search",    "desktop",         2,                 0,
+  "Unassigned",     "mobile",          1,                 0
+)
+```
+
+## Step 2: Reshape to One Row per Session
+
+```{r}
+#| label: reshape
+#| code-line-numbers: "|2-5|6|8-19"
+sessions_long <- ga4 |>
+  mutate(not_engaged = sessions - engaged_sessions) |>
+  select(-sessions) |>
+  pivot_longer(c(engaged_sessions, not_engaged),
+               names_to = "engaged", values_to = "n") |>
+  uncount(n) |>                      # one row per session
+  mutate(
+    engaged = if_else(engaged == "engaged_sessions", "Engaged", "Not engaged"),
+    engaged = factor(engaged, levels = c("Engaged", "Not engaged")),
+    device  = factor(device,
+                     levels = c("mobile", "desktop", "tablet"),
+                     labels = c("Mobile", "Desktop", "Tablet")),
+    # Referral, AI Assistant, Paid Search, and Unassigned are too small alone
+    channel = fct_collapse(channel,
+      "Referral and other" = c("Referral", "AI Assistant",
+                               "Paid Search", "Unassigned")),
+    channel = fct_relevel(channel, "Direct", "Organic Search",
+                          "Organic Social", "Referral and other")
+  )
+
+glimpse(sessions_long)
+```
+
+## Step 3: Cross-Tab of Device by Engagement {.smaller}
+
+The two variables are **device category** and **whether the session was engaged**. Both are categorical, so the right test is a chi-square test of independence.
+
+```{r}
+#| label: tbl-cross
+#| tbl-cap: "Session engagement by device category"
+#| output-location: column
+tbl_device <- sessions_long |>
+  tbl_cross(
+    row = device,
+    col = engaged,
+    percent = "row",
+    label = list(device ~ "Device category", engaged ~ "Session engagement")
+  ) |>
+  add_p() |>
+  bold_labels()
+
+tbl_device |>
+  as_gt() |>
+  tab_source_note("Source: GA4, Wellness Ranch property, Oct 8 to Oct 31, 2026. Row percentages.") |>
+  slide_table()
+```
+
+```{r}
+#| label: chisq
+#| echo: false
+# Same test run directly, so I can report the statistic and check expected counts
+chi_device <- chisq.test(table(sessions_long$device, sessions_long$engaged))
+```
+
+## A Quick Look at the Same Result
+
+```{r}
+#| label: fig-device
+#| fig-cap: "Engagement rate by device category"
+#| fig-width: 9
+#| fig-height: 3.6
+#| code-fold: true
+sessions_long |>
+  group_by(device) |>
+  summarise(rate = mean(engaged == "Engaged"), n = n()) |>
+  ggplot(aes(x = rate, y = fct_rev(device))) +
+  geom_col(fill = "#1E4D2B", width = 0.6) +
+  geom_text(aes(label = paste0(round(rate * 100), "% of ", n, " sessions")),
+            hjust = 1.05, color = "#F6F1E3", size = 5) +
+  scale_x_continuous(labels = scales::percent, limits = c(0, 1)) +
+  labs(x = "Engaged sessions", y = NULL) +
+  theme_minimal(base_size = 16)
+```
+
+## Interpretation: Are Device and Engagement Associated? {.smaller}
+
+::::: columns
+::: {.column width="58%"}
+::: incremental
+-   Mobile sessions had the highest engagement rate (69%), followed by desktop (63%) and tablet (56%).
+-   The chi-square test gives χ²(`r chi_device$parameter`) = `r round(chi_device$statistic, 2)`, and `r inline_text(tbl_device, col_level = "p.value")`.
+-   That p-value is just above 0.05. At the 5% level, I **cannot conclude** that device and engagement are associated in this sample.
+-   The smallest expected count is `r round(min(chi_device$expected), 1)`, which is above 5, so the chi-square test is acceptable here. Tablet only has 16 sessions, so I would not read much into its rate.
+:::
+:::
+
+::: {.column width="42%"}
+::: {.fragment .fade-up}
+::: takeaway
+**What this means for the client**
+
+I expected mobile visitors to engage less, because small screens usually make a site harder to use. The data does not show that. If anything, mobile is slightly ahead.
+
+The gap is close enough to the cutoff that I would check it again once we have more data.
+:::
+:::
+:::
+:::::
+
+::: notes
+The mobile result made me wonder if something else is going on, like which channel mobile visitors come from. That is what the regression in Part 4 checks.
+:::
+
+# Part 4: Multiple Regression with CEP Data {background-color="#1E4D2B"}
+
+## The Model {.smaller}
+
+::: prompt-box
+**Prompt 4:** Using the MSDM CEP data, run multiple regression. The dependent variable can be continuous or dichotomous. Regress a dependent variable on a set of independent variables. Code, produce the table, and interpret the result.
+:::
+
+::::: columns
+::: {.column width="50%"}
+-   **Dependent variable:** engaged session (1 = engaged, 0 = not engaged). It is dichotomous, so this is a **logistic regression**.
+-   **Independent variables:** device category and channel group.
+-   **Reference groups:** Mobile for device and Direct for channel.
+:::
+
+::: {.column width="50%"}
+::: {.fragment .highlight-green}
+The question is which type of traffic is more likely to stay and engage, once device and channel are both in the model.
+:::
+:::
+:::::
+
+```{r}
+#| label: model
+sessions_long <- sessions_long |>
+  mutate(engaged_bin = if_else(engaged == "Engaged", 1, 0))
+
+m_engaged <- glm(engaged_bin ~ device + channel,
+                 data = sessions_long,
+                 family = binomial(link = "logit"))
+```
+
+## Regression Table with tbl_regression() {.smaller}
+
+```{r}
+#| label: tbl-regression
+#| tbl-cap: "Logistic regression predicting an engaged session"
+#| output-location: column
+tbl_adj <- m_engaged |>
+  tbl_regression(
+    exponentiate = TRUE,             # show odds ratios
+    label = list(device ~ "Device category", channel ~ "Channel group")
+  ) |>
+  bold_p(t = 0.05) |>
+  bold_labels()
+
+tbl_adj |>
+  add_glance_table(include = c(nobs, logLik, AIC)) |>
+  as_gt() |>
+  tab_source_note("Source: GA4, Wellness Ranch property, Oct 8 to Oct 31, 2026.") |>
+  slide_table()
+```
+
+## One Variable at a Time vs. Together {.smaller}
+
+`tbl_uvregression()` runs a separate model for each predictor. `tbl_merge()` puts those results next to the full model, so I can see what changes when both predictors are included.
+
+```{r}
+#| label: tbl-merge
+#| tbl-cap: "Unadjusted and adjusted odds ratios for an engaged session"
+#| output-location: slide
+tbl_unadj <- sessions_long |>
+  tbl_uvregression(
+    method = glm,
+    y = engaged_bin,
+    include = c(device, channel),
+    method.args = list(family = binomial),
+    exponentiate = TRUE,
+    label = list(device ~ "Device category", channel ~ "Channel group")
+  ) |>
+  bold_p(t = 0.05) |>
+  bold_labels()
+
+tbl_merge(
+  list(tbl_unadj, tbl_adj),
+  tab_spanner = c("**One predictor at a time**", "**Both predictors together**")
+) |>
+  as_gt() |>
+  slide_table(size = 24)
+```
+
+## Interpretation: What Predicts Engagement? {.smaller}
+
+::: incremental
+-   **Channel matters.** Compared with Direct traffic, Organic Social sessions had higher odds of being engaged, with an odds ratio of `r inline_text(tbl_adj, variable = channel, level = "Organic Social")`. Organic Search was also higher, at `r inline_text(tbl_adj, variable = channel, level = "Organic Search")`.
+-   **Referral and other** was not statistically different from Direct. Its odds ratio is `r inline_text(tbl_adj, variable = channel, level = "Referral and other")`, and the group only has 44 sessions.
+-   **Device does not matter once channel is in the model.** Desktop compared with mobile is `r inline_text(tbl_adj, variable = device, level = "Desktop")`.
+-   In the one-at-a-time column, desktop looks worse than mobile. In the full model, that gap goes away. Almost all Organic Social traffic is on mobile, so mobile was getting credit for what is really a channel effect.
+:::
+
+. . .
+
+::: takeaway
+**For Wellness Ranch:** visitors who arrive from social media and search engage more than visitors who type the address in or use a bookmark. That supports the SEO and outreach work in our CEP. It also tells me the mobile site is not the weak spot I assumed it was.
+:::
+
+## Limitations I Want to Be Upfront About {transition="fade"}
+
+::: incremental
+1.  **Short window.** The data covers 24 days, because October 8 is the first day GA4 recorded sessions for this property.
+2.  **One big day.** A large share of the Organic Social sessions came from a spike on October 9. One popular post could be driving the social result.
+3.  **Sessions, not people.** The same visitor can have more than one session, so the rows are not fully independent. The p-values are probably a little too optimistic.
+4.  **Only two predictors.** Since I started from GA4 totals, I could only use the dimensions in the report. Landing page would be a good one to add next.
+5.  **Small groups.** Tablet (16 sessions) and Referral and other (44 sessions) have wide confidence intervals.
+:::
+
+::: notes
+For the CEP, the plan is to pull the same report again after our SEO changes are live and compare equal time windows.
+:::
+
+# Wrap-Up
+
+## What I Am Taking Away {transition="zoom"}
+
+::::: columns
+::: {.column width="50%"}
+### About the package
+
+-   `{gtsummary}` does the summarizing and the table in one step.
+-   The test is named in the footnote, so the table explains itself.
+-   `inline_text()` keeps my written interpretation tied to the table.
+:::
+
+::: {.column width="50%"}
+### About my CEP data
+
+-   Device and engagement were not significantly associated (`r inline_text(tbl_device, col_level = "p.value")`).
+-   Channel is the stronger predictor of engagement.
+-   Looking at one variable at a time almost led me to the wrong conclusion about mobile.
+:::
+:::::
+
+## Revealjs Features Used in This Deck {.smaller}
+
+| Feature | Where to find it |
+|------------------------------|------------------------------------------|
+| Title slide and section title slides | Opening slide and each "Part" divider |
+| Incremental lists | Most bullet lists |
+| Manual incremental (`. . .`) | Functions slide, Prompt 2.1, Part 4 interpretation |
+| Fragments | Data slide, Model slide, Part 3 interpretation |
+| Columns | Functions, benefits, data, and wrap-up slides |
+| Tabset | Prompt 2.2 |
+| Speaker notes (press S) | Intro and several later slides |
+| Asides and footnotes | Intro, Functions slide, Data slide |
+| Footer and logo | Every slide |
+| Slide transitions | Zoom, convex, and fade on individual slides |
+| Content overflow | `scrollable: true` and `.smaller` |
+| Code line highlighting | Data entry and reshape slides |
+| Ready-made theme, customized | `serif` with `custom.scss` layered on top |
+| Sass variables and CSS | `custom.scss` and `styles.css` |
+| References and citations | `references.bib`, cited throughout |
+
+: Quarto and Revealjs features {.striped}
+
+## References
+
+::: {#refs}
+:::
+
+# Appendix {.unnumbered}
+
+## Links
+
+-   GitHub Repo: <https://github.com/Buenoalexa11/IBM6500>
+-   QMD file: <https://github.com/Buenoalexa11/IBM6500/blob/main/M06-gtsummary-Reflection-Assignment.qmd>
+-   GitHub Pages: <https://buenoalexa11.github.io/IBM6500/M06-gtsummary-Reflection-Assignment.html>
