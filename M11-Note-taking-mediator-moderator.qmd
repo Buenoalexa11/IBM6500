@@ -1,0 +1,316 @@
+---
+title: "M11-Note-taking-mediator-moderator"
+subtitle: "Article Reading and Summary: Baron and Kenny (1986) on Moderators and Mediators"
+author: "Alexa Bueno"
+date: today
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 3
+    toc-expand: true
+    number-sections: true
+    code-link: true
+    code-fold: false
+    code-tools: true
+    code-overflow: wrap
+    embed-resources: true
+editor: visual
+execute:
+  echo: true
+  warning: false
+  message: false
+  freeze: auto
+---
+
+# Overview
+
+## Purpose of This Note
+
+This note summarizes the article assigned for Module 11:
+
+> Baron, R. M., & Kenny, D. A. (1986). The moderator-mediator variable distinction in social psychological research: Conceptual, strategic, and statistical considerations. *Journal of Personality and Social Psychology, 51*(6), 1173-1182.
+
+I wrote it as a reference I can come back to when I need to decide whether a variable is a moderator or a mediator, and how to test it. Everything in the summary sections is in my own words. The marketing examples and the R practice at the end are mine and are not from the article.
+
+## Why the Article Was Written
+
+Baron and Kenny noticed that researchers were using "moderator" and "mediator" as if they meant the same thing. They argue that the two are different in three ways:
+
+1.  **Conceptually.** They answer different questions.
+2.  **Strategically.** They are useful at different points in a research program.
+3.  **Statistically.** They are tested with different procedures.
+
+::: callout-tip
+## The one-line version
+
+A **moderator** tells you *when* or *for whom* an effect happens. A **mediator** tells you *how* or *why* it happens.
+:::
+
+## Quick Comparison
+
+| Question | Moderator | Mediator |
+|-----------------|---------------------------|---------------------------|
+| What does it do? | Changes the strength or direction of the relationship between a predictor and an outcome | Carries the effect of the predictor to the outcome |
+| What question does it answer? | When? For whom? Under what conditions? | How? Why? Through what process? |
+| Where does it sit in the model? | Next to the predictor, as another independent variable | Between the predictor and the outcome |
+| How is it tested? | An interaction (predictor × moderator) | A series of regressions that check each path |
+| When is it most useful? | When a relationship is weak or inconsistent across studies | When a relationship is strong and you want to explain it |
+| Should it relate to the predictor? | Ideally no | Yes, the predictor has to affect it |
+
+: Moderator vs. mediator at a glance {.striped}
+
+# Moderators
+
+## Definition
+
+A moderator is a variable that affects the **direction or strength** of the relationship between an independent variable (predictor) and a dependent variable (outcome). It can be qualitative, like gender or customer type, or quantitative, like income or level of reward.
+
+In ANOVA terms, moderation is an **interaction**. The effect of one variable depends on the level of another.
+
+## The Moderator Model
+
+```{mermaid}
+%%| label: fig-moderator
+%%| echo: false
+%%| fig-cap: "Moderator model. Moderation is supported when path c (the interaction) is significant."
+flowchart LR
+  X["Predictor"] -->|a| Y["Outcome"]
+  Z["Moderator"] -->|b| Y
+  XZ["Predictor × Moderator"] -->|c| Y
+```
+
+Key points about this model:
+
+-   There are three paths into the outcome: the predictor (a), the moderator (b), and their product (c).
+-   The moderator hypothesis is supported if **path c is significant**. Paths a and b can also be significant, but they are not what the test is about.
+-   The moderator works at the same level as the predictor. Both are treated as independent variables, and neither one comes before the other in a causal chain.
+-   It is best if the moderator is **not correlated** with the predictor or the outcome. That makes the interaction term easier to interpret.
+
+::: callout-note
+## My marketing example
+
+A discount code (predictor) increases purchases (outcome). The lift might be large for new customers and small for returning customers. Customer type is the moderator because it changes how strong the discount effect is. It does not explain why discounts work.
+:::
+
+## How to Test Moderation: Four Cases
+
+The right analysis depends on whether the predictor and the moderator are categorical or continuous.
+
+| Case | Predictor | Moderator | Recommended analysis |
+|----------|------------|------------|-------------------------------------|
+| 1 | Dichotomous | Dichotomous | 2 × 2 ANOVA. Moderation is the interaction. |
+| 2 | Continuous | Dichotomous | Compare the effect of the predictor across the moderator groups. Compare **unstandardized regression coefficients**, not correlations. |
+| 3 | Dichotomous | Continuous | Decide on the form of the moderation first (linear, quadratic, or step), then test the matching term. |
+| 4 | Continuous | Continuous | Add the product of the two variables to the regression, or dichotomize the moderator if a step pattern is expected. |
+
+: Four cases for testing moderation {.striped}
+
+### Notes on Case 2
+
+Comparing correlations between groups seems natural, but the article points out two problems:
+
+-   Correlations depend on the variance of the predictor. If the predictor varies more in one group, the correlation will be different even if the real effect is the same.
+-   If the outcome is measured with more error in one group, the correlation will be lower in that group for reasons that have nothing to do with moderation.
+
+Regression coefficients are not affected by those two issues in the same way, so they are the better comparison.
+
+### Notes on Case 3
+
+When the moderator is continuous, I need a hypothesis about **how** the effect changes across its range:
+
+-   **Linear:** the effect of the predictor grows or shrinks steadily as the moderator increases. Test with the predictor × moderator product term.
+-   **Quadratic:** the effect changes in a curved way. Test by adding a predictor × moderator-squared term.
+-   **Step:** the effect switches on or off at a certain point. Test by dichotomizing the moderator at that point.
+
+### Notes on Case 4
+
+With two continuous variables, the usual approach is the product term. The main warning is about **measurement error**. If either variable is measured with error, the product term is even less reliable than the two variables are on their own. This makes real interactions harder to detect, so a non-significant interaction does not always mean there is no moderation.
+
+# Mediators
+
+## Definition
+
+A mediator is the **mechanism** through which the predictor influences the outcome. The article connects this to the idea that something happens inside the person between a stimulus and a response. The predictor changes the mediator, and the mediator changes the outcome.
+
+## The Mediator Model
+
+```{mermaid}
+%%| label: fig-mediator
+%%| echo: false
+%%| fig-cap: "Mediator model. The indirect effect runs through paths a and b. Path c is the direct effect."
+flowchart LR
+  X["Predictor"] -->|a| M["Mediator"]
+  M -->|b| Y["Outcome"]
+  X -->|c| Y
+```
+
+A variable functions as a mediator when three conditions are met:
+
+1.  Changes in the predictor significantly account for changes in the mediator (**path a**).
+2.  Changes in the mediator significantly account for changes in the outcome (**path b**).
+3.  When paths a and b are controlled, the relationship between the predictor and the outcome (**path c**) is no longer significant, or is clearly reduced.
+
+If path c drops to zero, that is evidence of a single dominant mediator, often called complete mediation. If path c shrinks but does not reach zero, there are probably several mediators at work. Baron and Kenny say that in psychology, a meaningful **reduction** is the more realistic goal, since most outcomes have more than one cause.
+
+::: callout-note
+## My marketing example
+
+Free shipping (predictor) increases purchases (outcome). One explanation is that free shipping raises perceived value, and perceived value drives the purchase. Perceived value is the mediator because it explains why free shipping works.
+:::
+
+## How to Test Mediation: Three Regressions
+
+The article recommends estimating three regression equations.
+
+| Step | Regression | What needs to happen |
+|------------|-----------------------|--------------------------------------|
+| 1 | Mediator on predictor | The predictor must affect the mediator |
+| 2 | Outcome on predictor | The predictor must affect the outcome |
+| 3 | Outcome on predictor **and** mediator | The mediator must affect the outcome, and the predictor's effect must be smaller than in Step 2 |
+
+: The Baron and Kenny steps {.striped}
+
+Perfect mediation holds if the predictor has no effect in Step 3 once the mediator is controlled.
+
+::: callout-important
+## Things to watch for
+
+-   **Multicollinearity.** The predictor and the mediator have to be correlated for mediation to exist. That same correlation reduces the power of the test in Step 3, so the size of the coefficients matters, not just their significance.
+-   **Testing the indirect effect.** The article gives a significance test for the indirect effect (a × b) based on Sobel (1982). The standard error is approximately $\sqrt{b^2 s_a^2 + a^2 s_b^2 + s_a^2 s_b^2}$, where $s_a$ and $s_b$ are the standard errors of paths a and b.
+:::
+
+## Assumptions Behind the Mediation Test
+
+Two assumptions are easy to overlook:
+
+1.  **The mediator is measured without error.** Mediators are often internal states like attitudes or perceptions, which are hard to measure well. Measurement error in the mediator tends to make the mediator's effect look smaller and the predictor's direct effect look larger than they really are.
+2.  **The outcome does not cause the mediator.** If the outcome feeds back into the mediator, ordinary regression gives biased estimates.
+
+The suggested fixes are to use multiple indicators of the mediator and estimate the model with structural equation modeling, which handles measurement error, and to use other estimation methods when feedback is likely. This connects to what we are doing in class now with measurement models and SEM.
+
+# Using Both Together
+
+## Combined Models
+
+A single study can include both moderation and mediation. The article describes two ways they combine:
+
+-   **Mediated moderation.** There is an interaction between two variables, and the question is what process carries that interaction to the outcome. The interaction affects a mediator, and the mediator affects the outcome.
+-   **Moderated mediation.** A mediation process exists, but its strength depends on a third variable. The mediator matters more for some people or conditions than for others.
+
+The article works through this with an example about perceived control, showing how the same set of regressions can be extended to include the interaction term and the mediator together.
+
+## Strategic Considerations
+
+This was the most practical part of the article for me.
+
+-   **Moderators come in when a relationship is weak or inconsistent.** If a predictor works in one setting and not in another, a moderator may explain the difference.
+-   **Mediators come in when a relationship is strong.** Once an effect is reliable, the next step is asking what produces it.
+-   **A moderator can point toward a mediator.** Finding that an effect holds for one group and not another raises the question of what is different about that group, and that difference may be the mechanism.
+-   **They lead to different actions.** A moderator tells me who to target or when to act. A mediator tells me what to change.
+
+# Practice in R
+
+## About This Section
+
+This section is my own practice and is not from the article. I simulated a small data set so I could run the steps myself. The numbers are made up, so the results only show how the procedure works.
+
+The scenario: ad exposure (`x`) increases perceived value (`m`), which increases purchase intention (`y`). I also added customer type (`returning`) as a possible moderator.
+
+```{r}
+#| label: simulate
+set.seed(6500)
+n <- 300
+
+# Predictor: ad exposure (standardized)
+x <- rnorm(n)
+
+# Possible moderator: 0 = new customer, 1 = returning customer
+returning <- rbinom(n, 1, 0.5)
+
+# Mediator: perceived value depends on ad exposure
+m <- 0.5 * x + rnorm(n)
+
+# Outcome: purchase intention depends mostly on perceived value,
+# plus a small direct effect of ads that is stronger for new customers
+y <- 0.6 * m + 0.25 * x - 0.20 * x * returning + rnorm(n)
+
+dat <- data.frame(x, m, y, returning)
+head(dat)
+```
+
+## Mediation: The Three Regressions
+
+```{r}
+#| label: mediation
+step1 <- lm(m ~ x, data = dat)        # Step 1: predictor -> mediator (path a)
+step2 <- lm(y ~ x, data = dat)        # Step 2: predictor -> outcome (total effect)
+step3 <- lm(y ~ x + m, data = dat)    # Step 3: predictor + mediator -> outcome
+
+round(coef(summary(step1)), 3)
+round(coef(summary(step2)), 3)
+round(coef(summary(step3)), 3)
+```
+
+```{r}
+#| label: sobel
+# Pull out the pieces for the indirect effect
+a   <- coef(summary(step1))["x", "Estimate"]
+s_a <- coef(summary(step1))["x", "Std. Error"]
+b   <- coef(summary(step3))["m", "Estimate"]
+s_b <- coef(summary(step3))["m", "Std. Error"]
+
+total_effect  <- coef(step2)["x"]
+direct_effect <- coef(step3)["x"]
+indirect      <- a * b
+
+# Standard error formula from the article
+se_indirect <- sqrt(b^2 * s_a^2 + a^2 * s_b^2 + s_a^2 * s_b^2)
+z_value     <- indirect / se_indirect
+p_value     <- 2 * pnorm(-abs(z_value))
+
+round(c(total = unname(total_effect), direct = unname(direct_effect),
+        indirect = indirect, z = z_value, p = p_value), 3)
+```
+
+**Reading the output.**
+
+-   Step 1: ad exposure predicts perceived value (a = `r round(a, 2)`).
+-   Step 2: ad exposure predicts purchase intention on its own (total effect = `r round(total_effect, 2)`).
+-   Step 3: perceived value predicts purchase intention with ad exposure controlled (b = `r round(b, 2)`), and the effect of ad exposure drops from `r round(total_effect, 2)` to `r round(direct_effect, 2)`.
+-   The indirect effect is `r round(indirect, 2)` with z = `r round(z_value, 2)`.
+
+The effect of ads gets smaller once perceived value is in the model, which is the pattern Baron and Kenny describe for mediation. The direct effect in Step 3 is still significant (p = `r round(coef(summary(step3))["x", "Pr(>|t|)"], 3)`), so this is partial mediation and not complete mediation.
+
+## Moderation: The Interaction Term
+
+This matches Case 2 from the article: a continuous predictor with a dichotomous moderator.
+
+```{r}
+#| label: moderation
+mod_fit <- lm(y ~ x * returning, data = dat)
+round(coef(summary(mod_fit)), 3)
+```
+
+The row to look at is `x:returning`. That is path c in the moderator model. If it is significant, the effect of ad exposure on purchase intention is different for new and returning customers. The other rows are the main effects, which are not the test of moderation.
+
+In this sample the interaction is not significant (p = `r round(coef(summary(mod_fit))["x:returning", "Pr(>|t|)"], 3)`), so I would not conclude that customer type moderates the effect. I built a small interaction into the simulated data, so this was a good reminder that interactions are harder to detect than main effects.
+
+# Takeaways
+
+-   I used to treat these two words as roughly the same. The clearest way for me to keep them apart is the question each one answers: a moderator is about **when or for whom**, and a mediator is about **how or why**.
+-   The test follows from the definition. Moderation is an interaction. Mediation is a chain of paths that all have to hold.
+-   Measurement quality matters for both. Unreliable measures make interactions harder to find and make mediators look weaker than they are.
+-   For survey research, this affects design and not just analysis. If I think a variable is a mediator, I need to measure it well, ideally with multiple items.
+
+# Reference
+
+Baron, R. M., & Kenny, D. A. (1986). The moderator-mediator variable distinction in social psychological research: Conceptual, strategic, and statistical considerations. *Journal of Personality and Social Psychology, 51*(6), 1173-1182. <https://doi.org/10.1037/0022-3514.51.6.1173>
+
+# Appendix {.unnumbered}
+
+## Project Links
+
+-   [GitHub Repository](https://github.com/Buenoalexa11/IBM6500)
+-   [Quarto Source File on GitHub](https://github.com/Buenoalexa11/IBM6500/blob/main/M11-Note-taking-mediator-moderator.qmd)
+-   [GitHub Pages Website](https://buenoalexa11.github.io/IBM6500/M11-Note-taking-mediator-moderator.html)
