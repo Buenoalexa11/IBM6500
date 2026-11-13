@@ -1,0 +1,68 @@
+---
+title: "IC-W12-1 (11/12)-Class Participation"
+author: "Alexa Bueno"
+format:
+  html:
+    embed-resources: true
+    toc: true
+---
+
+## Case 31 Background
+
+Case 31 is the Employees Federal Credit Union (EFCU) survey. The board wants to know why members are not borrowing from the credit union. The survey data come from a mail questionnaire, and variables are named by question number (q1, q2, and so on). Tonight we worked through R4a and R4b.
+
+## Quarto Slide Formatting Tips
+
+- **Output location:** Choosing "column fragment" puts the output on the right and keeps the code on the left.
+- **Table labels:** Because it is a table and not a figure, the label starts with `tbl-` instead of `fig-`. The caption goes next to the label.
+- **Caption position:** By default a table caption shows on top and a figure caption shows on the bottom.
+- **New slide:** Three hyphens (`---`) start the next slide. We used this to move from the hypotheses slide to the summary insights and conclusion slide.
+- **Pausing:** The pause marker reveals part of the text one piece at a time.
+- **Text size:** He controls text size with the small-text and medium-text classes.
+- **Visual mode warning:** Switching to visual mode and back can add extra stuff to the file, like extra `---` lines, so it is worth checking the slides afterward.
+- **Math notation (LaTeX):** LaTeX is popular in math and STEM for complex notation. One dollar sign on each side keeps the formula inline, and two dollar signs on each side give the formula its own line, which helps when the formula is long. Chi-square is written `\chi^2`.
+
+## R4b: Chi-square Independence Test
+
+**Research question (R4b):** Are there any perceived differences in awareness of services between members who live in the area of the firm's headquarters and members who live elsewhere?
+
+- **Independent variable:** where the member lives (q38, headquarters area yes or no). Same one used in R4a.
+- **Dependent variable:** awareness of services, q13 through q26, which is 14 questions. Each one is on an ordinal scale (aware and have used, aware but have not used, unaware).
+- **Why chi-square:** The dependent variable is ordinal, so this is the non-parametric route. Both variables are categorical and we want to know whether they are related or independent, so we use the chi-square test of independence.
+- **Workflow:** Start with a cross-tab for the descriptive statistics, then run the chi-square independence test.
+
+### Example: q13r (share account awareness) by q38
+
+**1. Cleaning.** q13r and q38 are metadata, meaning labelled numbers, so we turn them into factors with `haven::as_factor()`. That drops the numbers and keeps the labels attached to them. There are similar functions like `as.vector()` in base R and `as_factor()` in other packages, but here we use haven's. We do it for both the dependent and the independent variable and save it back into `case31`.
+
+**2. Cross-tab.** `table(case31$q13r, case31$q38)` puts awareness in the rows and headquarters (yes or no) in the columns. The cells are counts.
+
+| Awareness of share account | Lives in HQ area (yes) | Lives elsewhere (no) |
+|---|---|---|
+| Unaware | 34 | 49 |
+| Aware but have not used | 16 | 16 |
+| Aware and have used | 7 | 6 |
+
+**3. Percentages.** Adding `prop.table(margin = 2) * 100` gives column percentages, since margin = 2 means by column. For example, 59.6% of the members who live in the headquarters area were unaware of the share account.
+
+**4. How to read it.** We compare the pattern of awareness among HQ-area members with the pattern among members who live elsewhere. If the pattern is the same, the two variables are independent and not associated. If the pattern changes, they are associated and not independent.
+
+## R4a
+
+The R4a slide used `gtsummary` (`tbl_summary()` with `add_difference()`, `add_overall()`, and `add_n()`) to test the difference in attitudes toward employee proficiency between members who live in the headquarters area and those who do not.
+
+## Key Takeaways
+
+- An ordinal outcome with a categorical grouping variable calls for a cross-tab and a chi-square test of independence.
+- Column percentages are what let you compare patterns across groups, since raw counts are hard to compare when group sizes differ.
+- Use `tbl-` labels for tables and `fig-` labels for figures in Quarto.
+
+## Tool Use
+
+I used Claude to organize my notes into this Quarto file from my class notes and the lecture transcript. I checked the counts and code against what was shown in class and wrote the takeaways myself.
+
+## Appendix
+
+- Repo: https://github.com/Buenoalexa11/IBM6500
+- QMD file on GitHub: https://github.com/Buenoalexa11/IBM6500/blob/main/IC-W12-1-11-12-Class-Participation.qmd
+- Rendered page: https://buenoalexa11.github.io/IBM6500/IC-W12-1-11-12-Class-Participation.html
