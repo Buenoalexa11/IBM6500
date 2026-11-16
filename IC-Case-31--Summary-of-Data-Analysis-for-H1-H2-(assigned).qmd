@@ -1,0 +1,115 @@
+---
+title: "IC-Case 31- Summary of Data Analysis for H1-H2 (assigned)"
+author: "Alexa Bueno"
+format: html
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(haven)
+library(dplyr)
+library(car)
+library(effectsize)
+
+# The .sav file needs to be in the same folder as this .qmd
+efcu <- read_sav("Case 31 Data_efcu_4.sav")
+```
+
+## Overview
+
+This report summarizes the analysis for H1 and H2 of Case 31 (Employees Federal Credit Union). The survey has 128 usable member responses. I follow the Data Analysis Table for the variables and tests, and the results are summarized the same way as R3, R4, and R6.
+
+## H1
+
+**Hypothesis:** Members' awareness of the regular share account will influence their opinions on the adequacy of financial services in meeting members' needs.
+
+| Item | Variable | Scale |
+|---|---|---|
+| Independent variable | Q13r, awareness of the regular share account (1 = Unaware, 2 = Aware but have not used, 3 = Aware and have used) | Ordinal, used as a 3-group factor |
+| Dependent variable | Q33, financial services meet the needs of members (1 = Strongly disagree to 5 = Strongly agree) | Interval |
+| Test | One-way ANOVA | |
+
+**Why this test:** H1 compares the average of one interval outcome (Q33) across three separate groups of members. A t-test only handles two groups, so a one-way ANOVA is the right choice. Each member belongs to just one awareness group, so the groups are independent.
+
+```{r}
+#| label: h1-prep
+efcu$q13_r_f <- factor(efcu$q13_r,
+                       levels = c(1, 2, 3),
+                       labels = c("Unaware", "Aware, not used", "Aware, used"))
+
+# Descriptives by group
+efcu |>
+  group_by(q13_r_f) |>
+  summarise(n = n(),
+            mean = round(mean(q33), 2),
+            sd = round(sd(q33), 2))
+```
+
+```{r}
+#| label: h1-anova
+# Homogeneity of variance check
+leveneTest(q33 ~ q13_r_f, data = efcu, center = mean)
+
+# One-way ANOVA
+h1_aov <- aov(q33 ~ q13_r_f, data = efcu)
+summary(h1_aov)
+eta_squared(h1_aov)
+
+# Post hoc comparisons
+TukeyHSD(h1_aov)
+```
+
+**Result:** Levene's test was not significant (p = .934), so the equal variance assumption holds. The one-way ANOVA was significant, F(2, 125) = 4.63, p = .011, with a medium effect size (eta squared = .07). H1 is supported.
+
+The Tukey post hoc test shows where the difference is. Members who were aware of the regular share account and had used it (M = 3.08, SD = 0.76) agreed less that the credit union's services meet members' needs than members who were unaware (M = 3.63, SD = 0.66, p = .017) and members who were aware but had not used it (M = 3.72, SD = 0.63, p = .011). The unaware group and the aware but not used group did not differ (p = .782).
+
+**Takeaway:** Awareness matters, but not in the direction I would have guessed. The members who actually use the regular share account are the least convinced that services meet their needs. The group that has used it is small (n = 13), so I would be careful about reading too much into this.
+
+## H2
+
+**Hypothesis:** Members will not be different in their opinion on the credit union's loan rate (Q8r) and the degree to which they agree that the credit union's loan rate is lower than competitors (Q30).
+
+| Item | Variable | Scale |
+|---|---|---|
+| Variable 1 | Q8r, opinion about rates charged on borrowed funds (1 = Very low to 5 = Very high) | Interval |
+| Variable 2 | Q30, credit union loan rates are lower than others (1 = Strongly disagree to 5 = Strongly agree) | Interval |
+| Test | Paired samples t-test | |
+
+**Why this test:** Both variables come from the same members, and I want to know if the two average scores differ. Since each member answers both questions, the two scores are paired (not independent), so a paired samples t-test is appropriate. An independent t-test would ignore that the scores come from the same people.
+
+Q8r has 21 "no opinion" responses coded as missing, so only members with both answers are used.
+
+```{r}
+#| label: h2-ttest
+h2 <- efcu |> select(Q8_r, q30) |> na.omit()
+nrow(h2)
+
+# Descriptives
+h2 |>
+  summarise(across(everything(),
+                   list(mean = ~round(mean(.x), 2), sd = ~round(sd(.x), 2))))
+
+# Paired samples t-test
+t.test(h2$Q8_r, h2$q30, paired = TRUE)
+
+# Effect size
+cohens_d(h2$Q8_r, h2$q30, paired = TRUE)
+```
+
+**Result:** Based on 107 members with both answers, the average opinion on loan rates charged (Q8r, M = 3.14, SD = 0.76) was not significantly different from the average agreement that the credit union's rates are lower than competitors (Q30, M = 3.06, SD = 0.92), t(106) = 0.60, p = .549. The mean difference was 0.08 (95% CI: -0.19 to 0.36), and the effect size was very small (d = 0.10). H2 is supported, because the hypothesis predicted no difference.
+
+**A caution on reading this:** The two scales do not point the same direction. On Q8r a higher score means the member thinks rates are higher, and on Q30 a higher score means the member agrees our rates are lower. So the two averages landing close together does not mean members see the loan rates as the same thing. The two scores are also negatively related (r = -.49), which fits that reversed wording. I would treat H2 as a test of whether the average scores differ, and not as strong evidence that members have one shared view about loan rates.
+
+## Summary
+
+| Hypothesis | Test | Result | Supported? |
+|---|---|---|---|
+| H1 | One-way ANOVA | F(2, 125) = 4.63, p = .011 | Yes |
+| H2 | Paired samples t-test | t(106) = 0.60, p = .549 | Yes (no difference predicted) |
+
+## Appendix
+
+- GitHub repo: <https://github.com/Buenoalexa11/IBM6500>
+- QMD file on GitHub: <https://github.com/Buenoalexa11/IBM6500/blob/main/IC-Case-31--Summary-of-Data-Analysis-for-H1-H2-(assigned).qmd>
+- GitHub Pages (rendered): <https://buenoalexa11.github.io/IBM6500/IC-Case-31--Summary-of-Data-Analysis-for-H1-H2-(assigned).html>
