@@ -1,0 +1,127 @@
+---
+title: "IC-Case 31- Summary of Data Analysis for H5a-H5d"
+author: "Alexa Bueno"
+format:
+  html:
+    theme: cosmo
+    embed-resources: true
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(haven)
+library(dplyr)
+library(car)
+
+# The .sav file needs to be in the same folder as this .qmd
+efcu <- read_sav("Case 31 Data_efcu_4.sav")
+```
+
+## Overview
+
+This report summarizes the analysis for H5a through H5d of Case 31 (Employees Federal Credit Union). All four hypotheses share the same dependent variable, so they are tested together in one multiple regression. I follow the Data Analysis Table for the variables and tests, and the results are summarized the same way as R3, R6, and R4.
+
+## Hypotheses and Variables
+
+| Hypothesis | Independent variable | Variable | Scale |
+|---|---|---|---|
+| H5a | Confidentiality of personal financial information | Q31 | Interval (1 = Strongly disagree to 5 = Strongly agree) |
+| H5b | Loan application processing promptness | Q32 | Interval (1 to 5) |
+| H5c | Financial services meet members' needs | Q33 | Interval (1 to 5) |
+| H5d | Loan application simplicity and easiness | Q34 | Interval (1 to 5) |
+| All | Dependent variable: overall rating of the credit union's operations and management | Q37r | Interval (recoded so 5 = Excellent, 1 = Very poor) |
+
+Each hypothesis says the independent variable will positively influence the overall attitude toward the credit union's operational efficiency.
+
+**Why multiple regression:** There is one interval dependent variable (Q37r) and four interval independent variables (Q31 to Q34). Multiple regression lets me test all four at once. It shows how much of the overall attitude the four predictors explain together, and it gives each predictor its own effect while holding the other three constant. Running four separate simple regressions would ignore the fact that the predictors overlap with each other.
+
+## Data Preparation
+
+Q37r has 7 members who gave "No Opinion," which is coded as missing. The regression uses only members with an answer on all five variables.
+
+```{r}
+#| label: h5-prep
+h5 <- efcu |> select(Q37_r, q31, q32, q33, q34) |> na.omit()
+nrow(h5)
+
+# Descriptives
+h5 |>
+  summarise(across(everything(),
+                   list(mean = ~round(mean(.x), 2), sd = ~round(sd(.x), 2))))
+
+# Correlations
+round(cor(h5), 2)
+```
+
+## Multiple Regression
+
+```{r}
+#| label: h5-model
+h5_lm <- lm(Q37_r ~ q31 + q32 + q33 + q34, data = h5)
+summary(h5_lm)
+
+# 95% confidence intervals
+round(confint(h5_lm), 3)
+
+# Standardized betas (z-score every variable, then rerun)
+h5_z <- as.data.frame(scale(h5))
+round(coef(lm(Q37_r ~ q31 + q32 + q33 + q34, data = h5_z)), 3)
+```
+
+## Assumption Checks
+
+```{r}
+#| label: h5-assumptions
+# Multicollinearity: VIF values near 1 are good, above 5 would be a concern
+round(vif(h5_lm), 2)
+
+# Independence of errors
+durbinWatsonTest(h5_lm)
+
+# Residual plots
+par(mfrow = c(1, 2))
+plot(h5_lm, which = 1)
+plot(h5_lm, which = 2)
+par(mfrow = c(1, 1))
+```
+
+**Assumptions:** The VIF values are all below 1.5, so multicollinearity is not a problem. The Durbin-Watson statistic is about 2.23, so the errors look independent. The residuals are not perfectly normal (they skew left because most members rated operations as Good or Excellent), so I would treat the p-values as a good guide and not as exact.
+
+## Results
+
+**Overall model:** The model was significant, F(4, 116) = 12.46, p < .001. The four predictors together explain about 30% of the variation in the overall rating of operations (R squared = .30, adjusted R squared = .28), which is a medium to large effect for survey data.
+
+| Hypothesis | Predictor | B | Std. beta | p | Supported? |
+|---|---|---|---|---|---|
+| H5a | Q31 Confidentiality | 0.19 | .18 | .036 | Yes |
+| H5b | Q32 Loan processing promptness | 0.31 | .34 | < .001 | Yes |
+| H5c | Q33 Services meet needs | 0.29 | .27 | .001 | Yes |
+| H5d | Q34 Loan application simplicity | -0.07 | -.07 | .390 | No |
+
+**H5a:** Supported. Members who believe the credit union keeps their financial information confidential rate its operations higher, B = 0.19, p = .036. A one point higher agreement on confidentiality goes with about a 0.19 point higher overall rating, holding the other predictors constant. The effect is the smallest of the three significant ones.
+
+**H5b:** Supported. Prompt loan processing was the strongest predictor, B = 0.31, standardized beta = .34, p < .001. Members who feel loans are processed quickly give the credit union a clearly better overall rating.
+
+**H5c:** Supported. Members who feel the financial services meet their needs also rate operations higher, B = 0.29, standardized beta = .27, p = .001.
+
+**H5d:** Not supported. Loan application simplicity did not predict the overall rating, B = -0.07, p = .390, and the 95% confidence interval (-0.23 to 0.09) includes zero. The coefficient is also slightly negative, which is the opposite of what the hypothesis predicted, but it is small enough to read as no effect. Q34 is correlated with Q32 (r = .39), so when promptness is already in the model, ease of the application adds nothing new.
+
+**Takeaway:** Members judge the credit union's operations mostly on speed (Q32), whether it meets their needs (Q33), and whether they trust it with their information (Q31). How simple the loan application is does not add anything once those are accounted for. For the credit union, that suggests faster loan processing is the best place to put effort if it wants to improve its overall operations rating. The model leaves about 70% of the variation unexplained, so other factors also matter.
+
+## Summary
+
+| Hypothesis | Test | Result | Supported? |
+|---|---|---|---|
+| H5a | Multiple regression | B = 0.19, p = .036 | Yes |
+| H5b | Multiple regression | B = 0.31, p < .001 | Yes |
+| H5c | Multiple regression | B = 0.29, p = .001 | Yes |
+| H5d | Multiple regression | B = -0.07, p = .390 | No |
+
+Overall model: F(4, 116) = 12.46, p < .001, R squared = .30, n = 121.
+
+## Appendix
+
+- GitHub repo: <https://github.com/Buenoalexa11/IBM6500>
+- QMD file on GitHub: <https://github.com/Buenoalexa11/IBM6500/blob/main/IC-Case-31-Summary-of-Data-Analysis-for-H5a-H5d.qmd>
+- GitHub Pages (rendered): <https://buenoalexa11.github.io/IBM6500/IC-Case-31-Summary-of-Data-Analysis-for-H5a-H5d.html>
