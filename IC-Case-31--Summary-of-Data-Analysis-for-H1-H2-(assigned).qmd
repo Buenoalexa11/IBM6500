@@ -1,7 +1,10 @@
 ---
 title: "IC-Case 31- Summary of Data Analysis for H1-H2 (assigned)"
 author: "Alexa Bueno"
-format: html
+format:
+  html:
+    theme: cosmo
+    embed-resources: true
 ---
 
 ```{r}
