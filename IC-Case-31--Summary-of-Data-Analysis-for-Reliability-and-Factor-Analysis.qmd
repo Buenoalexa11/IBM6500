@@ -1,0 +1,200 @@
+---
+title: "IC-Case 31- Summary of Data Analysis for Reliability and Factor Analysis"
+author: "Alexa Bueno"
+format: html
+embed-resources: true
+---
+
+```{r}
+#| label: setup
+#| message: false
+#| warning: false
+
+# install.packages(c("tidyverse", "psych", "GPArotation", "haven"))  # run once if needed
+library(tidyverse)
+library(psych)
+library(GPArotation)
+library(haven)
+```
+
+## Overview
+
+Case 31 has two multi-item scales. R3 is attitude toward employee proficiency (Q3 to Q6). R6 is attitude toward operational effectiveness, and only the metric items (Q31 to Q34) need factor and reliability analysis. For each scale I checked construct validity first (convergent and discriminant) with factor analysis, then reliability with Cronbach's alpha. The last section explains what the results mean for the next step, which is whether to build a composite scale.
+
+Short version: R3 holds together very well and a composite makes sense. R6 does not hold together as one scale, so I would not combine Q31 to Q34 into a composite.
+
+## Load the data
+
+```{r}
+#| label: load-data
+
+# the .sav file needs to be in the same folder as this .qmd
+case31 <- read_sav("Case_31_Data_efcu_4.sav")
+
+# the variable names are lowercase in the file, so make them uppercase
+names(case31) <- toupper(names(case31))
+
+# only the items we need
+r3 <- case31 |> select(Q3, Q4, Q5, Q6) |> mutate(across(everything(), as.numeric))
+r6 <- case31 |> select(Q31, Q32, Q33, Q34) |> mutate(across(everything(), as.numeric))
+
+nrow(case31)
+colSums(is.na(cbind(r3, r6)))
+```
+
+There are 128 respondents and none of the eight items have missing values, so all 128 are used. The items are on a 1 to 5 agree/disagree scale.
+
+# R3: Attitude toward employee proficiency (Q3 to Q6)
+
+## Is the data suitable for factor analysis?
+
+```{r}
+#| label: r3-suitability
+
+cor_r3 <- cor(r3)
+round(cor_r3, 2)
+
+KMO(r3)
+cortest.bartlett(cor_r3, n = nrow(r3))
+```
+
+**What this means:** All four items are positively correlated (about .46 to .72). KMO is 0.78, which is above the .60 minimum, and Bartlett's test is significant (chi-square about 263.6, p < .001). So the items are correlated enough to be factored.
+
+## How many factors?
+
+```{r}
+#| label: r3-parallel
+
+fa.parallel(r3, fa = "pc", n.iter = 100)
+
+round(eigen(cor_r3)$values, 3)
+```
+
+**What this means:** The first eigenvalue is 2.88 and the other three are all below 1 (0.56, 0.35, 0.22). So only one factor comes out, which is what we expect for one construct. This supports convergent validity.
+
+## Factor loadings and communalities
+
+```{r}
+#| label: r3-fa
+
+pc_r3 <- principal(r3, nfactors = 1, rotate = "none")
+pc_r3
+```
+
+**What this means:** One component explains about 72% of the variance in the four items. The loadings are high for all items (Q3 = .81, Q4 = .91, Q5 = .85, Q6 = .82), well above the .50 cutoff. The communalities (h2) run from about .65 to .83, so the factor explains most of the variance in each item. Nothing here is a weak item. Q4 (employees are helpful) is the strongest.
+
+## Reliability (Cronbach's alpha)
+
+```{r}
+#| label: r3-alpha
+
+alpha_r3 <- psych::alpha(r3)
+alpha_r3$total
+alpha_r3$alpha.drop
+alpha_r3$item.stats
+```
+
+**What this means:** Cronbach's alpha is about .87, which is above the .70 rule of thumb, so the scale is reliable (good internal consistency). Dropping any item would lower alpha (to .79 to .85), and the corrected item-total correlations are all high (about .66 to .82). So there is no reason to remove an item.
+
+# R6: Attitude toward operational effectiveness (Q31 to Q34)
+
+## Is the data suitable for factor analysis?
+
+```{r}
+#| label: r6-suitability
+
+cor_r6 <- cor(r6)
+round(cor_r6, 2)
+
+KMO(r6)
+cortest.bartlett(cor_r6, n = nrow(r6))
+```
+
+**What this means:** This is where R6 starts to look different from R3. The correlations are low and uneven. Q32 correlates with Q31 (.28) and Q34 (.39), but Q31 and Q34 are almost uncorrelated (.00), and Q33 barely correlates with anything (.04 to .22). KMO is about 0.50, which is right at the bare minimum and below the .60 I would want. Bartlett's test is significant (chi-square about 39.3, p < .001), so the items are not completely unrelated, but the overall pattern is weak.
+
+## How many factors?
+
+```{r}
+#| label: r6-parallel
+
+fa.parallel(r6, fa = "pc", n.iter = 100)
+
+round(eigen(cor_r6)$values, 3)
+```
+
+**What this means:** Two eigenvalues are above 1 (1.58 and 1.03). The first only explains about 39% of the variance. So Q31 to Q34 do not clearly come from a single construct. We expected one factor and did not get a clean one, which is a problem for convergent validity.
+
+## Factor loadings and communalities
+
+```{r}
+#| label: r6-fa
+
+pc_r6 <- principal(r6, nfactors = 1, rotate = "none")
+pc_r6
+```
+
+**What this means:** If I force one component, the loadings are Q31 = .51, Q32 = .84, Q33 = .48, and Q34 = .61. Only Q32 is strong. The communalities are low for Q31 (.26) and Q33 (.23), meaning the factor explains less than a third of their variance. So the items are not converging on one factor. (I used principal components here because a maximum likelihood factor solution gave an impossible result for Q32, with a communality of about 1.0.)
+
+## Reliability (Cronbach's alpha)
+
+```{r}
+#| label: r6-alpha
+
+alpha_r6 <- psych::alpha(r6)
+alpha_r6$total
+alpha_r6$alpha.drop
+alpha_r6$item.stats
+```
+
+**What this means:** Alpha is only about .47, well below the .70 cutoff, so the scale is not reliable as a four item scale. The corrected item-total correlations are low (about .19 to .50). Dropping items does not fix it either. Dropping Q32 makes alpha much worse (about .14), and dropping any of the other three barely changes it (about .45 to .47). Four items that are not very related to each other do not make a dependable scale.
+
+# Discriminant validity: both scales together
+
+To check discriminant validity, I ran the factor analysis on all eight items together. If the two scales are different constructs, the R3 items should load on one factor and the R6 items on another.
+
+```{r}
+#| label: both-scales
+
+both <- bind_cols(r3, r6)
+
+KMO(both)
+round(eigen(cor(both))$values, 3)
+
+# 2 components, varimax rotation
+pc_both <- principal(both, nfactors = 2, rotate = "varimax")
+print(pc_both$loadings, cutoff = 0.30)
+round(pc_both$communality, 2)
+```
+
+**What this means:** KMO for the eight items together is about 0.80 and two eigenvalues are above 1 (3.46 and 1.27), so a two factor solution is reasonable. After rotation, the four R3 items (Q3 to Q6) all load strongly on one factor (about .79 to .88) and none of them load meaningfully on the second one. That is good support for discriminant validity on the R3 side.
+
+The R6 items are messier. Q34 (.86) and Q32 (.76) load on the second factor, but Q32 also cross-loads on the R3 factor (about .37). Q31 (.37) and Q33 (.50) load mostly on the R3 factor, and their communalities are very low (.17 and .27). So R6 does not stay together as its own construct. Two of its items sit with the employee factor and two split off on their own.
+
+# Discussion: reliability and validity
+
+**R3 (employee proficiency).** The scale shows convergent validity. One factor comes out, it explains about 72% of the variance, and every item loads above .80. It also shows reliability, with alpha around .87. The R3 items also stay separate from the R6 items in the combined analysis. So R3 is a valid and reliable multi-item scale.
+
+**R6 (operational effectiveness).** The scale does not show convergent validity. The correlations are weak, KMO is about .50, two factors have eigenvalues above 1, and the loadings and communalities for Q31 and Q33 are low. It also fails on reliability, with alpha around .47. In the combined analysis the items do not form a clean second factor. So Q31 to Q34 should not be treated as one scale. A possible reason is that the four questions are about different things (confidentiality, loan processing speed, meeting member needs, easy applications), so they may not all measure one idea.
+
+# Implication for the next step in data analysis
+
+- **R3:** Because the scale is valid and reliable, it makes sense to create a composite scale by averaging Q3 to Q6 and use that one variable going forward (for example, to compare groups or run a regression). That variable already exists in the data as `ATT_EMPL`, the average of Q3 to Q6.
+- **R6:** Because the scale is not reliable (alpha around .47) and does not show one factor, I would not create a composite from Q31 to Q34. Averaging them would give a number that does not mean one clear thing. I would analyze Q31, Q32, Q33, and Q34 separately as individual items. If I wanted to try to salvage a scale, the only pair that goes together somewhat is Q32 and Q34 (r = .39), but two items is thin and I would treat that as exploratory, not as a proven scale.
+
+```{r}
+#| label: composite
+
+# R3 composite (same as ATT_EMPL in the data file)
+case31 <- case31 |>
+  mutate(R3_proficiency = rowMeans(across(c(Q3, Q4, Q5, Q6))))
+
+summary(case31$R3_proficiency)
+```
+
+*Note: This analysis only checks the quality of the scales. The insights for R3 and R6 will be addressed in the separate in-class activity later in M13.*
+
+# Appendix
+
+- Repo: [github.com/Buenoalexa11/IBM6500](https://github.com/Buenoalexa11/IBM6500)
+- .qmd file on GitHub: [IC-Case-31--Summary-of-Data-Analysis-for-Reliability-and-Factor-Analysis.qmd](https://github.com/Buenoalexa11/IBM6500/blob/main/IC-Case-31--Summary-of-Data-Analysis-for-Reliability-and-Factor-Analysis.qmd)
+- Rendered GitHub Pages page: [IC-Case-31--Summary-of-Data-Analysis-for-Reliability-and-Factor-Analysis.html](https://buenoalexa11.github.io/IBM6500/IC-Case-31--Summary-of-Data-Analysis-for-Reliability-and-Factor-Analysis.html)
