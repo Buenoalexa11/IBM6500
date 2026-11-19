@@ -1,0 +1,173 @@
+---
+title: "M12-Note-taking-CMB"
+author: "Alexa Bueno"
+format:
+  html:
+    toc: true
+---
+
+## Article Reference
+
+Podsakoff, P. M., MacKenzie, S. B., & Podsakoff, N. P. (2012). Sources of method bias in social science research and recommendations on how to control it. *Annual Review of Psychology, 63*, 539-569. <https://doi.org/10.1146/annurev-psych-120710-100452>
+
+## Big Picture
+
+Method bias is the systematic error that shows up in a study because of *how* the data was collected, not because of the actual constructs being studied. The authors say researchers still disagree on whether it is a real problem, even though many research settings can produce it. This review covers four things:
+
+1. What "method" and "method bias" mean
+2. What the evidence says about how much it affects results
+3. Procedural and statistical ways to control it
+4. Recommendations for researchers
+
+Their conclusion is that method bias can meaningfully affect item validity and reliability, and it can also change the relationship between constructs. So researchers need to know how to control it.
+
+Why it matters: a lot of research uses just one method. The paper cites a review where 76% of studies in six areas of psychology used only a single measurement method, and in studies with human subjects, 33% relied on self-report questionnaires alone. A separate review of information systems journals found 27% of 428 articles used self-report surveys as the only way of gathering data.
+
+## 1. What Is a Method and What Is Method Bias?
+
+**What is a method?** Scholars define it differently.
+
+- The broad view (Fiske, Campbell and Fiske) includes things like item content, response format, instructions, the examiner, the setting, and the reason the person is taking the test.
+- A narrower view (Lance et al.) limits "method" to alternative approaches to assigning numbers to observations. That view leaves out things like response tendencies and item order.
+- The authors prefer the broad definition. Their reasoning is that rater response styles, item characteristics, and the measurement context are all sources of systematic measurement error that threaten validity, so they should all count.
+
+**What is method bias?** The paper describes two harmful effects of uncontrolled method factors:
+
+1. It can bias estimates of construct reliability and validity. Systematic method variance gets lumped in with the systematic trait variance, which can make a scale look more reliable or valid than it really is.
+2. It can bias the estimated relationship between two different constructs. It can inflate it, deflate it, or have no effect at all. This can lead to Type I or Type II errors, wrong conclusions about how much variance is explained, and distorted discriminant or nomological validity.
+
+Even though one group of authors (Spector & Brannick) argues the reliability and validity effects are unimportant, the overall consensus the authors describe is that both forms of bias matter and should be controlled whenever possible.
+
+**Does method bias affect all measures equally?** There is disagreement here too.
+
+- The correlational marker variable technique assumes a method factor has an equal effect on all measures.
+- Other researchers say the effects are unequal. If you wrongly assume equal effects, you end up overestimating the method effect in some cases and underestimating it in others.
+- The evidence the authors review mostly supports unequal effects. Method variance in measures of different construct types ranged from 22% to 41% in Cote and Buckley's meta-analysis, and in Baumgartner and Steenkamp's work the share tied to specific response styles ranged from 0% to 29%.
+
+## 2. Empirical Evidence of the Effects
+
+### Effects on item reliability and validity
+
+Most of this evidence comes from multi-trait multi-method (MTMM) studies. Table 1 in the paper summarizes how variance splits up in five of them (medians for the Williams et al. study).
+
+| Study | Trait variance | Method variance | Error variance |
+|---|---|---|---|
+| Cote & Buckley (1987), 70 matrices | 42% | 26% | 32% |
+| Williams et al. (1989), 11 matrices | 48% | 25% | 21% |
+| Buckley et al. (1990), 61 matrices | 42% | 22% | 36% |
+| Doty & Glick (1998), 28 matrices | 46% | 32% | 22% |
+| Lance et al. (2010), 18 matrices | 40% | 18% | 42% |
+
+Taken together, 18% to 32% of the variance in items was due to method factors.
+
+A few other findings:
+
+- Scherpenzeel and Saris looked at 50 MTMM matrices. The biggest predictors of item validity and reliability included the type of construct, the form and length of the response scale, social desirability, the mode of data collection, item position, and the type of information requested.
+- Baumgartner and Steenkamp found that on average about 8% of the variance in an item (range 0% to 29%) was due to five specific response styles.
+
+The authors admit there are criticisms of the MTMM evidence (overlapping matrices, trait and method variance getting confounded when correlations are high, and estimation problems). They still think the evidence supports the general conclusion that method bias affects item validity and reliability.
+
+### Effects on the relationship between constructs
+
+*MTMM meta-analyses.* Using Cote and Buckley's numbers, the average observed correlation between traits can be split into a part from the true trait relationship and a part from the shared method. In their data, about 45% of the observed correlation (0.127 out of 0.281 plus 0.127) was inflated by method bias. Other meta-analyses gave 38% (Buckley et al.), 92% (Doty & Glick), and 60% (Lance et al.). The authors say these are probably conservative, since the biggest worry is studies that use only one method. They also note the estimates vary a lot (38% to 92%), but the bottom line is that the amount of bias is substantial.
+
+*Method-method pair technique.* Sharma et al. grouped meta-analytic correlations by how susceptible the method pair was to bias. In technology acceptance research, the mean correlation between the focal constructs was about 0.16 when susceptibility was low and about 0.59 when it was high. About 56% of the between-study variance was due to method bias.
+
+*Same source vs. different source (Table 2).* Relationships look much stronger when both measures come from the same source. For example, the corrected correlation between leader behaviors and outcome variables was 0.456 for same-source data but only 0.191 for different-source data, which is 239% larger. Across the relationships in the table, the inflation ranged from about 133% to 304%. The authors point out that some of that gap could be real differences in rater perspectives and not only method bias.
+
+*Specific sources of bias.* These are the examples from the paper:
+
+- **Response styles** (Baumgartner & Steenkamp, N = 10,477 consumers across 11 countries): 27% of the variance in the size of the 91 intercorrelations among 14 constructs was due to five response styles, and 64% was due to the traits. The effect depended on whether the true correlation and the response style correlation were positive or negative. For example, with a positive true correlation and positively correlated response styles, the average correlation went from 0.13 to 0.20 (inflated 54%).
+- **Proximity and reversed items** (Weijters et al., 2009): two unrelated items correlated 0.04 when they were six items apart but 0.09 when they were next to each other. For same-construct nonreversed items, the correlation went from 0.35 (six or more apart) to 0.62 (adjacent). Reversed items went from -0.26 to -0.06 when adjacent.
+- **Item wording** (Harris & Bladen): the average correlation among five constructs was 0.21 with item wording bias controlled and 0.50 when it was not.
+- **Item context** (Harrison et al.): the correlation between outcome favorability and fairness perceptions was 0.10 in a positive measurement context and 0.50 in a negative one.
+
+The authors say this evidence goes against the claim that method effects are small and rarely a threat. They side with the view that common method variance is not just an urban legend.
+
+## 3. Ways to Control Method Bias
+
+### Procedural remedies (things you do when designing the study)
+
+**Get predictor and criterion measures from different sources.** Either get them from two different people, or get one from a person and the other from secondary data like company records. This helps with things like consistency motifs, implicit theories, social desirability, and mood. Evidence: the corrected predictor-criterion correlation dropped from 0.359 (same source) to 0.184 (different sources), a 49% drop. Lowe et al. found a drop from 0.57 to 0.19 for leadership style and effectiveness. Hulsheger et al. found a drop from 0.45 to 0.23 for team processes and innovation.
+
+Limits: it does not work well when both variables are about a person's own perceptions, beliefs, or feelings, since others cannot accurately judge those. It can also cost more time and money, and archival data may not represent the construct well. With small samples, splitting the sample can leave too little power.
+
+**Separate the predictor and criterion measures.**
+
+- *Temporal separation* (a time delay). Ostroff et al. found correlations were 32% lower after a one-month delay. Johnson et al. found the correlation between latent constructs was 43% smaller after a three-week delay. Rindfleisch et al. found few significant differences with a 30 to 36 month delay. Downsides: more complexity and cost, other non-method factors can creep in, more attrition with longer delays, it is hard to know the right delay length, and it assumes the true relationship is stable while the bias fades over time, which recent research questions.
+- *Proximal separation* (physical distance on the questionnaire). Weijters et al. suggest putting same-construct measures at least six items apart, using other constructs or buffer items. Downsides: longer questionnaires can cause fatigue and lower response rates, and buffer items that are conceptually related could create context effects.
+- *Psychological separation* (a cover story). Examples are a "multiple studies" cover story, hiding interest in the key variable among other questions, or disguising why a measure is being collected. The big downside is that it depends on the cover story being believable, so it should be pretested.
+
+**Eliminate common scale properties.** Using the same scale type, number of points, or anchor labels for predictor and criterion can create bias. Evidence: Kothandapani found a correlation of 0.45 with the same scale format and 0.18 without (a 60% decrease). Arora found 0.34 vs 0.23. Weijters et al. found 0.69 vs 0.60 for common vs different scale labeling. A limit is that you cannot always change the format without changing the meaning of the measure, and the authors say content validity should take priority since lack of content validity is a bigger threat than method bias.
+
+**Improve scale items to remove ambiguity.** Ambiguous items make respondents rely on their own response tendencies. Fixes: keep items simple, specific, and concise, define unfamiliar terms, split up complex questions, avoid vague concepts, avoid double-barreled questions, avoid complicated syntax, and label all scale points instead of just the end points. The authors say they could not find empirical evidence on how item ambiguity affects relationships between constructs.
+
+**Reduce social desirability in item wording.** Two common approaches are having judges rate how socially desirable items are and rewording the high ones, or checking how items correlate with a social desirability scale. The authors say they found no direct empirical evidence these procedures prevent bias in correlations, and rewording without hurting content validity is hard.
+
+**Balance positive and negative items.** This targets acquiescence and disacquiescence. It gives a built-in control because the bias goes up for half the items and down for the other half. Limits: many scales do not have an equal number of positive and negative items, reversed items can confuse people, and it does not fully control the biases, so it should be paired with statistical remedies.
+
+### Statistical remedies (things you do after data collection)
+
+| Technique | What it does | Main strengths | Main weaknesses |
+|---|---|---|---|
+| Unmeasured latent method factor | Adds a method factor whose only indicators are the substantive construct indicators that share a method | Does not require identifying the source of bias; models bias at the measurement level; does not require equal effects | May capture more than method variance (such as real relationships between constructs); can cause identification problems; assumes the method factor does not interact with the traits |
+| Correlation-based marker variable | Uses the smallest correlation with a theoretically unrelated marker variable to adjust the correlations | Easy to implement | Marker may not share method traits with the real variables; assumes bias only inflates; ignores measurement error; assumes equal effects and no interaction |
+| Regression-based marker variable | Adds a marker variable (3 to 5 if it is modestly correlated) to the regression | Easy to implement | Same kinds of problems as the correlation version; only for single-equation models; unclear what is actually being controlled |
+| Instrumental variable (2SLS) | Uses instruments related to the predictor but not to the error term | Gives a straightforward fix when the causes of bias cannot be measured | Hard to find strong instruments that are fully uncorrelated with the error term; weak instruments can give biased estimates and higher Type I error |
+| CFA marker | Uses several marker variables as indicators of a latent method factor in a three-phase process (test for method effects, quantify effects on reliability, sensitivity analysis) | Models bias at the indicator level; gives a statistical test; allows unequal effects | Does not identify the nature of the bias; the meaning of the method factor is ambiguous; results depend on which markers are used |
+| Directly measured latent method factor | Measures the suspected source of bias (such as social desirability or negative affect) and adds it to the model | Clearly identifies the bias source; controls for measurement error; works at the item level; does not require equal effects | You have to anticipate the main sources of bias and have valid measures of them; assumes no interaction |
+| Measured response style | Measures response styles (ARS, DRS, ERS, MRS) from random heterogeneous buffer items and partials them out | Specifies exactly which style is being controlled; handles measurement error; multiple indicators add stability | Only controls the styles you measure; needs extra data collection |
+
+Some details from the paper on the response style technique: you need a minimum of three sets of five items, using the same scale format as the other items. The four styles are acquiescence (ARS, agreeing regardless of content), disacquiescence (DRS, disagreeing regardless of content), extreme response style (ERS, picking the extreme ends), and midpoint response style (MRS, picking the middle).
+
+## 4. Recommendations
+
+**When is method bias likely to be a problem?** The authors lean on Krosnick's idea of *satisficing*. When answering well is hard but the respondent's ability or motivation is low, people give a merely satisfactory answer instead of an accurate one, and they rely more on response styles. So bias should be more likely when:
+
+- *Ability is low.* Examples are low verbal ability or education, fatigue late in a questionnaire, or lack of experience with the topic. Some personality characteristics are also tied to biased responding.
+- *Motivation is low.* Respondents may feel the questions are unimportant, think their answers won't matter, be filling out a survey to meet a requirement, be fatigued, or dislike the researcher. Social consequences also matter. If an answer has serious social consequences or the setting heightens defensiveness, people give more socially desirable answers.
+- *The task is hard or makes it easy to answer stylistically.* Complex or abstract questions, ambiguous items, and having earlier answers easily available (like on a paper questionnaire) can all increase bias. Grouping items by construct can make it easier to give consistent answers.
+
+**What can be done?**
+
+*Procedural:*
+
+- Match the difficulty of the questions to what respondents can actually answer. Do not ask them to "tell more than they can know."
+- Use clear, concise language and avoid ambiguity.
+- Boost motivation with a good cover story and instructions. Examples are stressing anonymity, saying there are no right or wrong answers, explaining how the data will be used, and promising feedback.
+- Keep the questionnaire short but vary item wording instead of just repeating synonyms.
+- Increase the effort needed to respond stylistically by balancing positive and negative items, separating items to avoid proximity effects, and varying scale types and anchors where appropriate.
+- Use separation (temporal, methodological, or psychological) or different sources, depending on what fits the study. The authors note that these procedures will not control every bias (self-deception, memory, and perceptual biases, for example), and for those, getting measures from different sources works best if there are multiple observers and the phenomenon is not self-referential.
+
+*Statistical:*
+
+1. Follow up the procedural remedies with a statistical one when bias is still a concern.
+2. First choice: the directly measured latent factor technique (if you can measure the source of the bias) or the measured response style technique (if the worry is response styles, following the Weijters et al. guidelines). Both control for measurement error and specify the nature of the bias.
+3. If the source is unknown or cannot be measured: use the CFA marker technique or the common method factor technique. These control for measurement error but do not clearly specify the nature of the bias. The CFA marker needs theoretically unrelated markers, and the common method factor can pick up irrelevant trait variance too.
+4. The instrumental variable technique is possible in principle, but it is hard to do in practice because good instruments are difficult to find.
+
+*Additional approaches:*
+
+- Test hypotheses about quadratic or interaction effects. Method bias can inflate or deflate simple linear relationships, but it cannot inflate quadratic or interaction effects (it only deflates them). So if a significant interaction or quadratic effect shows up, bias is not a likely explanation.
+- Chan's approach: identify potential sources of bias, manipulate them in the study design, and test whether the relationships generalize across conditions.
+
+One point I want to remember is the authors' own caution: there is no single best method for handling common method variance. The right choice depends on the sources of method variance in the study and which remedies are actually feasible. The goal is to make method bias a less believable rival explanation for the results.
+
+## Conclusion (from the article)
+
+The authors conclude that, although there is some disagreement about how to define "method" and "method bias," the evidence shows method bias can significantly influence item validities and reliabilities and the covariation between latent constructs. Researchers should know how to control for it, and the authors recommend using both procedural and statistical remedies.
+
+## My Takeaways
+
+*(These are my own notes for future reference. Edit them so they match your own thinking.)*
+
+- Both predictor and outcome in the same survey from the same person is the classic setup for this problem. If I run a customer survey in Qualtrics that asks about satisfaction and then about purchase intent right after, the link between them could look stronger than it really is.
+- Easy fixes I could use in my own surveys: put related questions farther apart, vary the response scale formats, keep the survey short, and make questions clear and specific.
+- A stronger design would be to pair survey answers with real behavior data, like actual order history. That fits the "different sources" idea in the paper.
+- In e-commerce work, this is a reminder to be careful when a dashboard or survey result seems too good. If both numbers came from the same source or the same instrument, some of the relationship might be method and not real.
+
+## Appendix
+
+- GitHub repo: <https://github.com/Buenoalexa11/IBM6500>
+- QMD file on GitHub: <https://github.com/Buenoalexa11/IBM6500/blob/main/M12-Note-taking-CMB.qmd>
+- GitHub Pages (rendered HTML): <https://buenoalexa11.github.io/IBM6500/M12-Note-taking-CMB.html>
