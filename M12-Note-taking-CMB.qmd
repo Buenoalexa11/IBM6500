@@ -3,7 +3,11 @@ title: "M12-Note-taking-CMB"
 author: "Alexa Bueno"
 format:
   html:
+    theme: cosmo
     toc: true
+    toc-location: left
+    embed-resources: true
+    smooth-scroll: true
 ---
 
 ## Article Reference
@@ -158,8 +162,6 @@ One point I want to remember is the authors' own caution: there is no single bes
 The authors conclude that, although there is some disagreement about how to define "method" and "method bias," the evidence shows method bias can significantly influence item validities and reliabilities and the covariation between latent constructs. Researchers should know how to control for it, and the authors recommend using both procedural and statistical remedies.
 
 ## My Takeaways
-
-*(These are my own notes for future reference. Edit them so they match your own thinking.)*
 
 - Both predictor and outcome in the same survey from the same person is the classic setup for this problem. If I run a customer survey in Qualtrics that asks about satisfaction and then about purchase intent right after, the link between them could look stronger than it really is.
 - Easy fixes I could use in my own surveys: put related questions farther apart, vary the response scale formats, keep the survey short, and make questions clear and specific.
